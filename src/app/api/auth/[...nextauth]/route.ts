@@ -22,7 +22,7 @@ const authOptions = {
        console.log(user?.id, user?.username)
        console.log(user);
        if(user) return {
-        id:"this identity",
+        id:String(user.id),
         name:user.username,
        };
 
@@ -38,13 +38,13 @@ callbacks: {
     ...session,
     user: {
       ...session.user,
-      id: token.sub,
+      id:token.sub,
     },
   }),
 },
 
 session:{
-  maxAge:20
+  maxAge:60000
 }
 ,
 pages:{

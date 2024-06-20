@@ -1,6 +1,6 @@
 import { useRef, KeyboardEvent, useState, useEffect } from "react"
 import { ChangeEvent, MouseEvent } from "react";
-import { useCommandStore } from "../store/commandStore";
+import { commandStore } from "../store/commandStore";
 
 
 
@@ -10,15 +10,16 @@ interface Props {
     inputData: string,
     promptInfo: {
         username?: string | null,
-        currentTime?: string,
+        currentCommandTime?: string,
         tittle?: string,
     },
+
+    focused?:boolean
 }
 
-export default function InputPrompt({ handleKeyDown, setInputData, inputData, promptInfo }: Props) {
+export default function InputPrompt({ handleKeyDown, setInputData, inputData, promptInfo, focused = true }: Props) {
     const inputRef = useRef<HTMLInputElement>(null);
-    const { commands } = useCommandStore();
-    const [isFocused, setIsFocused] = useState(true);
+    const { commandsExecutions } = commandStore();
     const handleCommandChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (inputRef.current) {
             inputRef.current.style.width = inputRef.current.value.length + "ch";
@@ -31,24 +32,18 @@ export default function InputPrompt({ handleKeyDown, setInputData, inputData, pr
     };
 
     useEffect(() => {
-        if (inputRef.current)
+        if (inputRef.current && focused)
             inputRef.current.style.width = 1 + "ch";
-    }, [commands]);
+        if(focused)
+            inputRef.current?.focus();
+    }, [commandsExecutions, focused]);
 
-    const handleFocus = ()=>{
-        setIsFocused(inputRef.current === document.activeElement);
-    }
-
-    useEffect(()=>{
-        document.addEventListener('focus',handleFocus,true);
-        return ()=> document.removeEventListener('focus',handleFocus)
-    },[])
-
+  
 
     return (
         <div>
             <pre className="inline-block">
-                {promptInfo.username && promptInfo.currentTime ? `${promptInfo.username}@${promptInfo?.currentTime}:$ ` : promptInfo.tittle + ": "}
+                {promptInfo.username && promptInfo.currentCommandTime ? `${promptInfo.username}@${promptInfo?.currentCommandTime}:$ ` : promptInfo.tittle + ": "}
                 <input
                     ref={inputRef}
                     onChange={handleCommandChange}
@@ -57,11 +52,11 @@ export default function InputPrompt({ handleKeyDown, setInputData, inputData, pr
                     autoFocus
                     className=" w-1 bg-inherit outline-none caret-transparent"
                     type={promptInfo.tittle == "Password" ? 'password': 'text'}
-                    disabled={!isFocused}
+                    disabled={!focused}
                 />
             </pre>
             {
-                isFocused && <span
+                focused && <span
                 className={` inline-block h-6 w-3 bg-blue-500 text-blue-500 cursor`}
                 onClick={handleCaretClick}
             >

@@ -1,38 +1,36 @@
 
-export enum remoteCommandsAvailable {
-    LS = "ls",
-    MV = "mv",
-    CP = "cp",
-    MKDIR = "mkdir",
+type Command = {
+    commandName: string;
+    availableFlags: string[],
+    miniumExpectecParams:number
+}
+export const remoteCommandsAvailable :Record<string, Command> = {
+    LS : {
+        commandName: "ls",
+        miniumExpectecParams: 1,
+        availableFlags:['a','b']
+    },
 }
 
-
-export enum localCommandsAvailable {
-    HELP = "help",
+export const  localCommandsAvailable:Record<string,Command>  ={
+    HELP : {
+            commandName: "help",
+            miniumExpectecParams: 1,
+            availableFlags:['a','b']
+    }
 }
 
+export const commandDefinitions = [
+    ...Object.values(remoteCommandsAvailable),
+    ...Object.values(localCommandsAvailable)
+]
 
-// Interfaz para definir el número de parámetros esperados para cada comando
-interface CommandBody {
-    command: remoteCommandsAvailable | localCommandsAvailable;
-    expectedParams:  number;
-    isLocal?: boolean;
-}
-
-// Objeto que mapea cada comando con el número de parámetros esperados
-export const commandDefinitions: CommandBody[] = [
- {command: remoteCommandsAvailable.LS, expectedParams:0},
- {command: remoteCommandsAvailable.CP, expectedParams:2},
- {command: remoteCommandsAvailable.MKDIR, expectedParams:1},
- {command: remoteCommandsAvailable.MV, expectedParams:2},
- {command: localCommandsAvailable.HELP, expectedParams:0, isLocal:true},
-];
 
 export type OutPut = {
     header?:string,
     list?:string[]
 }
-export type Command = {
+export type CommandOutput = {
     userName: string,
     time:string,
     input:string,
@@ -41,7 +39,7 @@ export type Command = {
     component?: ({output}:{output:OutPut | undefined}) => JSX.Element;
 }
 
-export type Commands = Command[];
+export type CommandsOutput = CommandOutput[];
 
 export type User = {
     id:number,

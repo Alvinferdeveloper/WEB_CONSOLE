@@ -1,5 +1,7 @@
-import { Commands as Comm } from "../types/command";
+import { CommandsOutput as Comm } from "../types/command";
 export default function Commands({ commands }: { commands: Comm }) {
+
+    
 
     return commands.map((command, index) => (
         <div className="" key={index}>
