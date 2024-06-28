@@ -17,8 +17,8 @@ export default function Cli() {
     const { banner} = useFiglet(session?.user.name || '');
     useEffect(() => {
         setScroll();
-        console.log(commandsExecutions)
     }, [commandsExecutions]);
+
 
     function setScroll() {
         if (cliRef.current) {

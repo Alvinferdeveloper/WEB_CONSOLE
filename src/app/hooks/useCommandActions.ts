@@ -1,23 +1,19 @@
-import { commandDefinitions, OutPut, User } from "../types/command";
+import { User } from "../types/user";
 import { commandStore } from "../store/commandStore";
 import {
-    executeLocalCommand,
     isCommandLocal,
     isCommandRemote,
     isCommandValid,
     parseCommand,
-    executeRemoteCommand,
-} from "../services/command";
-import { localCommandsAvailable } from "../types/command";
-import { localComponentaData } from "../data/commandData";
-import BasicComponenent from "../components/BasicComponent";
+} from "../utils/commandUtils";
+import { executeRemoteCommand, executeLocalCommand } from "../services/command";
+import BasicComponenent from "../components/outputs/BasicOutput";
 
 export default function useCommandActions() {
     const { commandsExecutions, addNewCommandExecution } = commandStore();
 
     const executeCommand = async (command: string, time: string, user: User) => {
         const { commandName, commandFlags, commandParams } = parseCommand(command);
-        console.log(commandName, commandFlags, commandParams);
         if (isCommandValid(commandName, commandParams, commandFlags)) {
             if (isCommandLocal(commandName)) {
                 const commandResponse = executeLocalCommand(
@@ -36,7 +32,6 @@ export default function useCommandActions() {
                 //addNewCommandExecution(commandResponse);
             }
         } else {
-            console.log('aqui')
             const commandResponse = {
                 userName: user.name,
                 time: time,

@@ -1,5 +1,5 @@
-import {  localCommandsAvailable } from "../types/command"
-import Help from "../components/Help"
+
+import Help from "../components/outputs/Help"
 export const localComponentaData = {
    HELP: {
         output:{

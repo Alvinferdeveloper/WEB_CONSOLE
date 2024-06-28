@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { User } from "../types/command";
+import { User } from "../types/user";
 
 type States = {
     user: User | null,

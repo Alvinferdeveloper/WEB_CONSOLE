@@ -4,7 +4,7 @@ import db from "@/app/libs/db";
 import { JWT } from "next-auth/jwt";
 import { Session } from "next-auth";
 
-const authOptions = {
+export const authOptions = {
     providers: [
   CredentialsProvider({
     name: 'Credentials',
@@ -18,9 +18,6 @@ const authOptions = {
         username:credentials?.username,
         password:credentials?.password
        }})
-
-       console.log(user?.id, user?.username)
-       console.log(user);
        if(user) return {
         id:String(user.id),
         name:user.username,
@@ -41,10 +38,12 @@ callbacks: {
       id:token.sub,
     },
   }),
+
+  
 },
 
 session:{
-  maxAge:60000
+  maxAge:600000
 }
 ,
 pages:{
@@ -55,6 +54,6 @@ pages:{
 
 
 
-const handler = NextAuth(authOptions);
+export const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST}; 

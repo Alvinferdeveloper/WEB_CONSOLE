@@ -1,5 +1,5 @@
 
-import { OutPut } from "../types/command"
+import { OutPut } from "../../types/command"
 export default function Help({output}:{output:OutPut | undefined}){
     return (
         <div>

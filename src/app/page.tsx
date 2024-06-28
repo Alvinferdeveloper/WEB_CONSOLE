@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import Cli from "./components/Cli"
 import { SessionProvider } from "next-auth/react"
 
