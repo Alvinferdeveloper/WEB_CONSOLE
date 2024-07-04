@@ -7,7 +7,7 @@ import {
     parseCommand,
 } from "../utils/commandUtils";
 import { executeRemoteCommand, executeLocalCommand } from "../services/command";
-import BasicComponenent from "../components/outputs/BasicOutput";
+import BasicOutput from "../components/outputs/BasicOutput";
 
 export default function useCommandActions() {
     const { commandsExecutions, addNewCommandExecution } = commandStore();
@@ -24,12 +24,12 @@ export default function useCommandActions() {
 
                 addNewCommandExecution(commandResponse);
             } else if (isCommandRemote(commandName)) {
-                const commandResponse = executeRemoteCommand(
-                    commandName,
+                const commandResponse = await executeRemoteCommand(
+                    {commandName, commandFlags, commandParams},
                     time,
                     user.name
                 );
-                //addNewCommandExecution(commandResponse);
+                addNewCommandExecution(commandResponse)
             }
         } else {
             const commandResponse = {
@@ -39,7 +39,7 @@ export default function useCommandActions() {
                 output: {
                     list:['Command not valid']
                 },
-                component: BasicComponenent
+                component: BasicOutput
             };
 
             addNewCommandExecution(commandResponse);

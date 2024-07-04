@@ -6,7 +6,7 @@ export const localComponentaData = {
         header:"Proporcionando ayuda",
         list:["Cp: Permite copiar de un archivo a otro"],
         },
-        component: Help
+
     },
    
 }
