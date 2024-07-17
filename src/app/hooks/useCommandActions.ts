@@ -4,46 +4,51 @@ import {
     isCommandLocal,
     isCommandRemote,
     isCommandValid,
+    isCommandWithActionNeeded,
     parseCommand,
 } from "../utils/commandUtils";
-import { executeRemoteCommand, executeLocalCommand } from "../services/command";
+import { executeRemoteCommand, executeLocalCommand, executeActionCommand } from "../services/command";
 import BasicOutput from "../components/outputs/BasicOutput";
+import { CommandPromptOutput } from "../types/command";
 
 export default function useCommandActions() {
-    const { commandsExecutions, addNewCommandExecution } = commandStore();
-
+    const { commandsExecutions, addNewCommandExecution, path } = commandStore();
     const executeCommand = async (command: string, time: string, user: User) => {
         const { commandName, commandFlags, commandParams } = parseCommand(command);
+        let commandPromptOutput: CommandPromptOutput | void = undefined;
         if (isCommandValid(commandName, commandParams, commandFlags)) {
-            if (isCommandLocal(commandName)) {
-                const commandResponse = executeLocalCommand(
+            if(isCommandWithActionNeeded(commandName)){// commands that need to execute actions on the local state
+                commandPromptOutput = await executeActionCommand({ commandName, commandFlags, commandParams}, time, user.name, path.absolutePath);
+            }
+            else if (isCommandLocal(commandName)) {
+                commandPromptOutput = executeLocalCommand(
                     commandName,
                     time,
-                    user.name
+                    user.name,
+                    path.absolutePath,
                 );
-
-                addNewCommandExecution(commandResponse);
             } else if (isCommandRemote(commandName)) {
-                const commandResponse = await executeRemoteCommand(
+                commandPromptOutput = await executeRemoteCommand(
                     {commandName, commandFlags, commandParams},
                     time,
-                    user.name
+                    user.name,
+                    path
                 );
-                addNewCommandExecution(commandResponse)
             }
         } else {
-            const commandResponse = {
+            commandPromptOutput = {
                 userName: user.name,
                 time: time,
                 input: commandName,
+                absolutePath: path.absolutePath,
                 output: {
                     list:['Command not valid']
                 },
                 component: BasicOutput
             };
-
-            addNewCommandExecution(commandResponse);
         }
+
+        commandPromptOutput && addNewCommandExecution(commandPromptOutput);
     };
 
     return { commandsExecutions, executeCommand };

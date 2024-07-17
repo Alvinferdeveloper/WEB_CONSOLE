@@ -19,7 +19,7 @@ interface Props {
 
 export default function InputPrompt({ handleKeyDown, setInputData, inputData, promptInfo, focused = true }: Props) {
     const inputRef = useRef<HTMLInputElement>(null);
-    const { commandsExecutions } = commandStore();
+    const { commandsExecutions, path} = commandStore();
     const handleCommandChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (inputRef.current) {
             inputRef.current.style.width = inputRef.current.value.length + "ch";
@@ -43,7 +43,7 @@ export default function InputPrompt({ handleKeyDown, setInputData, inputData, pr
     return (
         <div>
             <pre className="inline-block">
-                {promptInfo.username && promptInfo.currentCommandTime ? `${promptInfo.username}@${promptInfo?.currentCommandTime}:$ ` : promptInfo.tittle + ": "}
+                {promptInfo.username && promptInfo.currentCommandTime ? `${promptInfo.username}@${promptInfo?.currentCommandTime}:${path?.absolutePath}$ ` : promptInfo.tittle + ": "}
                 <input
                     ref={inputRef}
                     onChange={handleCommandChange}

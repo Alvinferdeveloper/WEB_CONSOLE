@@ -1,4 +1,3 @@
-import BasicOutput from "@/app/components/outputs/BasicOutput"
 export async function Mkdir(userName: string) {
     return {
         output: {
@@ -15,4 +14,13 @@ export async function Ls(){
         },
     }
 }
+
+export async function Cd(){
+    return {
+        id:10,
+        newPath:"Glory to god"
+    }
+}
+
+
 

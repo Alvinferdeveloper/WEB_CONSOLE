@@ -4,6 +4,7 @@ export const isCommandValid = (commandValue: string, commandParams:string[], fla
     const commandExists = commandDefinitions.find(command => command.commandName === commandValue);
     const areFlagsValid = flags.every(flag=> commandExists?.availableFlags.includes(flag));
     const miniumExpectecParams = commandParams.length == commandExists?.miniumExpectedParams;
+    console.log(commandExists, areFlagsValid, miniumExpectecParams)
     if(commandExists && areFlagsValid && miniumExpectecParams) return true;
     return false;
     
@@ -20,6 +21,10 @@ export const isCommandRemote = (commandValue:string) => {
 export const isCommandClear = (commandValue:string) => {
     return commandValue == "clear";
 }
+
+export const isCommandWithActionNeeded = (commandValue:string) => {   
+    return Object.values( commandDefinitions ).some(command => command.commandName === commandValue && command.accionNeeded)
+ }
 
 export const parseCommand = (command:string) => {
     const splitedCommand = command.trim().split(" ");

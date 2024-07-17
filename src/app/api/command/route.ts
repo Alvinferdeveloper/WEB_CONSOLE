@@ -9,7 +9,6 @@ async function executeCommand (req:Request){
     const session = await getServerSession();
     if(!session) throw new ApiError(404,"unauthorized access");
     const { commandName, flags, parameters } = await req.json();
-    console.log(commandName,flags,parameters);
     if(!(commandName in commandExecutables)) throw new ApiError(402,'Invalid command');
     const commandOutput = await commandExecutables[commandName as keyof typeof commandExecutables](session.user.name);
     return commandOutput;

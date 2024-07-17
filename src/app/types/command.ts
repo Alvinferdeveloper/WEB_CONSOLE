@@ -7,9 +7,10 @@ export type CommandPromptOutput = {
     userName: string,
     time:string,
     input:string,
-    output?:OutPut,
+    absolutePath:string,
+    output?:OutPut | void,
     notValid?: boolean,
-    component: ({output}:{output:OutPut | undefined}) => JSX.Element;
+    component: ({output}:{output:OutPut | void}) => JSX.Element;
 }
 
 export type CommandPromptOutputs = CommandPromptOutput[];

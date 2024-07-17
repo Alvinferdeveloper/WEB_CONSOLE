@@ -1,5 +1,5 @@
 import { OutPut } from "../../types/command";
-export default function BasicOutput({output}:{output:OutPut | undefined}){
+export default function BasicOutput({output}:{output:OutPut | void}){
     return (
         <div>
             {
