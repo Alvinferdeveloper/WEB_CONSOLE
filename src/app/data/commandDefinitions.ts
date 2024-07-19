@@ -29,6 +29,12 @@ export const remoteCommandsAvailable : Record<string, commandDefinition> = {
         miniumExpectedParams:0,
         availableFlags:[],
         accionNeeded:cd
+    },
+
+    TOUCH:{
+        commandName:'touch',
+        miniumExpectedParams:1,
+        availableFlags:[],
     }
 }
 

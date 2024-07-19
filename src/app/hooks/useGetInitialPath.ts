@@ -6,7 +6,7 @@ export default function useGetinitalPath(){
 
     useEffect(()=>{
         const getInitalPath = async ()=>{
-            const res = await fetch('api/useGetinitalPath');
+            const res = await fetch('api/initialPath');
             const json = await res.json();
             setPath({id:json.id, absolutePath:json.absolutePath})
         }

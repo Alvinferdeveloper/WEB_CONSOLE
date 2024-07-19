@@ -43,18 +43,6 @@ export const executeRemoteCommand = async ({ commandName, commandFlags, commandP
         body: JSON.stringify({ commandName, commandFlags, commandParams,path })
     })
 
-    if (!res.ok) {
-        return {
-            userName,
-            time,
-            input: commandName,
-            absolutePath: path.absolutePath,
-            output: {
-                list: ['Server Error']
-            },
-            component: BasicOutput,       
-         }
-    }
     const commandOutput = await res.json();
     const componentToRender = remoteCommandsAvailable[commandName.toUpperCase() as keyof typeof remoteCommandsAvailable].component;
     return {
@@ -62,6 +50,7 @@ export const executeRemoteCommand = async ({ commandName, commandFlags, commandP
         time: time,
         input: commandName,
         absolutePath: path.absolutePath,
+        output: commandOutput.output,
         component:componentToRender || BasicOutput,
        ...commandOutput, 
     }

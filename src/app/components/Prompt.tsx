@@ -10,6 +10,7 @@ import InputPrompt from "./InputPrompt";
 import { Session } from "next-auth";
 import { useUserStore } from "../store/userStore";
 import useCommandActions from "../hooks/useCommandActions";
+import useGetinitalPath from "../hooks/useGetInitialPath";
 
 
 
@@ -18,6 +19,7 @@ export default function Prompt() {
   const [command, setCommand] = useState<string>("");
   const { commandsExecutions, executeCommand} = useCommandActions();
   const { data: session } = useSession();
+  useGetinitalPath();
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key == "Enter" && session?.user) {

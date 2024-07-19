@@ -4,12 +4,12 @@ import { getServerSession } from "next-auth";
 import db from "@/app/libs/db";
 import { authOptions } from "../auth/[...nextauth]/route";
 
-async function executeCommand (req:Request){
+async function getInitialPath (req:Request){
     const session = await getServerSession(authOptions);
     if(!session) throw new ApiError(404,"unauthorized access");
     const path = await db.directory.findFirst({where:{userId:parseInt(session.user.id), absolutePath:'/'}});
     return path;
 }
 
-export const GET = globalExceptionHandler(executeCommand);
+export const GET = globalExceptionHandler(getInitialPath);
 
