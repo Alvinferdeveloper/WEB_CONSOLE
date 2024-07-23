@@ -6,7 +6,6 @@ import { ApiError } from "../utils/ApiError";
 
 
 const globalExceptionHandler = (fn:(req:Request)=>Promise<any>) => async (req:Request) => {
-    
     try{
         const resp = await fn(req);
         return NextResponse.json(resp);

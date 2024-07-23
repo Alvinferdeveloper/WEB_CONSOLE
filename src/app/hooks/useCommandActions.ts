@@ -18,7 +18,7 @@ export default function useCommandActions() {
         let commandPromptOutput: CommandPromptOutput | void = undefined;
         if (isCommandValid(commandName, commandParams, commandFlags)) {
             if(isCommandWithActionNeeded(commandName)){// commands that need to execute actions on the local state
-                commandPromptOutput = await executeActionCommand({ commandName, commandFlags, commandParams}, time, user.name, path.absolutePath);
+                commandPromptOutput = await executeActionCommand({ commandName, commandFlags, commandParams}, time, user.name, path);
             }
             else if (isCommandLocal(commandName)) {
                 commandPromptOutput = executeLocalCommand(

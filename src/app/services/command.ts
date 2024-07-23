@@ -4,16 +4,16 @@ import BasicOutput from "../components/outputs/BasicOutput";
 import { commandDefinitions, localCommandsAvailable, remoteCommandsAvailable } from "../data/commandDefinitions";
 import { comma } from "postcss/lib/list";
 
-export  const  executeActionCommand = async ({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }, time:string, userName:string, absolutePath:string ):Promise<CommandPromptOutput | void>=>{
+export  const  executeActionCommand = async ({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }, time:string, userName:string, currentPath:{id:number, absolutePath:string} ):Promise<CommandPromptOutput | void>=>{
     const commandAction = commandDefinitions.find(command => command.commandName === commandName);
     if(commandAction?.accionNeeded) {
-         const output = await commandAction.accionNeeded({ commandName, commandFlags, commandParams});
+         const output = await commandAction.accionNeeded({ commandName, commandFlags, commandParams},currentPath);
          if( commandName == 'clear') return undefined;
          return {
             input: commandName,
             output,
             userName,
-            absolutePath,
+            absolutePath:currentPath.absolutePath,
             time,
             component: BasicOutput,
         }
@@ -37,11 +37,11 @@ export const executeLocalCommand = (commandName: string, time: string, userName:
 }
 
 
-export const executeRemoteCommand = async ({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }, time: string, userName: string, path:{id:number,absolutePath:string }): Promise<CommandPromptOutput> => {
+export const executeRemoteCommand = async ({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }, time: string, userName: string, currentPath:{id:number,absolutePath:string }): Promise<CommandPromptOutput> => {
     const res = await fetch('/api/command', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ commandName, commandFlags, commandParams,path })
+        body: JSON.stringify({ commandName, commandFlags, commandParams,currentPath })
     })
 
     const commandOutput = await res.json();
@@ -49,7 +49,7 @@ export const executeRemoteCommand = async ({ commandName, commandFlags, commandP
     return {
         userName,
         input: commandName,
-        absolutePath: path.absolutePath,
+        absolutePath: currentPath.absolutePath,
         output: commandOutput,
         time,
         component:componentToRender || BasicOutput,

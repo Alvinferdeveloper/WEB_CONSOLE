@@ -9,9 +9,9 @@ import { authOptions } from "../auth/[...nextauth]/route";
 async function executeCommand (req:Request){
     const session = await getServerSession(authOptions);
     if(!session) throw new ApiError(404,"unauthorized access");
-    const { commandName, commandFlags, commandParams, path } = await req.json();
+    const { commandName, commandFlags, commandParams, currentPath } = await req.json();
     if(!(commandName in commandExecutables)) throw new ApiError(402,'Invalid command');
-    const commandOutput = await commandExecutables[commandName as keyof typeof commandExecutables](parseInt(session.user.id), {commandName, commandFlags, commandParams, path});
+    const commandOutput = await commandExecutables[commandName as keyof typeof commandExecutables]({userId:parseInt(session.user.id), commandElements:{commandFlags,commandName, commandParams},currentPath});
     return commandOutput;
 }
 

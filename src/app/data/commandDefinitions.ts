@@ -7,7 +7,7 @@ type commandDefinition = {
     miniumExpectedParams:number,
     availableFlags:string[],
     component?: (output:any) => JSX.Element,
-    accionNeeded?: ({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] })=>Promise<BasicOutPut | void>;
+    accionNeeded?: ({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }, currentPath:{id:number, absolutePath:string})=>Promise<BasicOutPut | void>;
 }
 
 export const remoteCommandsAvailable : Record<string, commandDefinition> = {
@@ -26,7 +26,7 @@ export const remoteCommandsAvailable : Record<string, commandDefinition> = {
 
     CD:{
         commandName:'cd',
-        miniumExpectedParams:0,
+        miniumExpectedParams:1,
         availableFlags:[],
         accionNeeded:cd
     },
