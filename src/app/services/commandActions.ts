@@ -1,7 +1,7 @@
 import { commandStore } from "../store/commandStore"
-import { OutPut } from "../types/command";
+import { BasicOutPut } from "../types/command";
 
-export async function cd({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }):Promise<OutPut | void>{
+export async function cd({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }):Promise<BasicOutPut | void>{
     const res = await fetch('/api/command', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

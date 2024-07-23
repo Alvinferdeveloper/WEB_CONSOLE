@@ -1,10 +1,11 @@
-import { OutPut } from "@/app/types/command"
-export function Ls({output}:{output:OutPut | void}) {
+
+import { LsOutPut } from "@/app/types/command"
+export function Ls({output}:{output: LsOutPut}) {
     return (
-        <div className=" bg-green-500">
-           {
-            output?.list?.map((log, index) =>  <p key={index}>{log}</p>)
-           }
+        <div className="grid grid-cols-4">
+        {
+          output.map((file,index) => <p  className={`${file.type == 'DIRECTORY' && ' text-blue-900'}`} key={index}>{file.name}</p>)
+        }
         </div>
     )
 }

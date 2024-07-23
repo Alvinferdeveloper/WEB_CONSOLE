@@ -1,16 +1,17 @@
-
-export type OutPut = {
-    header?:string,
-    list?:string[]
+import { LsResponse} from "./response";
+export type BasicOutPut = {
+    list?:string[];
 }
+
+export type LsOutPut = LsResponse[];
 export type CommandPromptOutput = {
     userName: string,
     time:string,
     input:string,
     absolutePath:string,
-    output?:OutPut | void,
+    output?:BasicOutPut | LsOutPut | void,
     notValid?: boolean,
-    component: ({output}:{output:OutPut | void}) => JSX.Element;
+    component: ({output}:{output:any}) => JSX.Element;
 }
 
 export type CommandPromptOutputs = CommandPromptOutput[];

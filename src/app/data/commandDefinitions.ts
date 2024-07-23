@@ -1,13 +1,13 @@
 import { Ls } from "../components/outputs/Ls"
 import { clear, cd} from "../services/commandActions";
-import { OutPut } from "../types/command"
+import { BasicOutPut } from "../types/command"
 
 type commandDefinition = {
     commandName: string,
     miniumExpectedParams:number,
     availableFlags:string[],
-    component?: ({output}:{output:OutPut | void}) => JSX.Element,
-    accionNeeded?: ({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] })=>Promise<OutPut | void>;
+    component?: (output:any) => JSX.Element,
+    accionNeeded?: ({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] })=>Promise<BasicOutPut | void>;
 }
 
 export const remoteCommandsAvailable : Record<string, commandDefinition> = {
