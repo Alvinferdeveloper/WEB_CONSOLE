@@ -48,7 +48,7 @@ export default function useCommandActions() {
             };
         }
 
-        commandPromptOutput && addNewCommandExecution(commandPromptOutput);
+        commandPromptOutput && addNewCommandExecution({...commandPromptOutput, input: command});
     };
 
     return { commandsExecutions, executeCommand };
