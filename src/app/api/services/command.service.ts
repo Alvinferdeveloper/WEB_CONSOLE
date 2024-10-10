@@ -1,4 +1,5 @@
 import db from "@/app/libs/db"
+import { ApiError } from "../utils/ApiError";
 
 interface Params {
     userId:number,
@@ -7,12 +8,12 @@ interface Params {
 }
 
 export async function Mkdir({userId, commandElements, currentPath}: Params) {
-    const isDirectoryOwnedByUser = await db.directory.findFirst({ where:{ id:currentPath.id,  userId}})
-    if(!isDirectoryOwnedByUser)  return { output:{
-        list:['Error: You are not the owner of this directory']
-    }}
-    const isCurrentPathRoot = isDirectoryOwnedByUser.absolutePath == '/';
-    const directoryAbsolutePath = isDirectoryOwnedByUser.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${commandElements.commandParams[0]}`);
+    const currentDirectory = await db.directory.findFirst({ where:{ id:currentPath.id,  userId}});
+    if(!currentDirectory) throw new ApiError(404, 'Resource not found');
+    const isCurrentPathRoot = currentDirectory.absolutePath == '/';
+    const directoryAbsolutePath = currentDirectory.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${commandElements.commandParams[0]}`);
+    const newDirectoryExists = await db.directory.findFirst({ where: { name:commandElements.commandParams[0]}});
+    if(newDirectoryExists) return { list: [ 'Error: Este directorio ya existe']}
     await db.directory.create({data:{ name: commandElements.commandParams[0], parentId:currentPath.id, userId, absolutePath:directoryAbsolutePath }})
 }
 
