@@ -65,4 +65,11 @@ export async function Touch({ userId, commandElements, currentPath}:Params){
 }
 
 
+export async function Rm({ userId, commandElements, currentPath}:Params){
+    const fileToDelete = await db.file.findFirst({ where: { name: commandElements.commandParams[0], directoryId: currentPath.id}});
+    if(!fileToDelete) return { list: [ 'Error: No se encontro el archivo a eliminar']};
+    await db.file.delete({ where: { id: fileToDelete?.id}});
+
+}
+
 
