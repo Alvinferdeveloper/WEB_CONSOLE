@@ -72,4 +72,10 @@ export async function Rm({ userId, commandElements, currentPath}:Params){
 
 }
 
+export async function Rmdir({commandElements, currentPath}:Params){
+    const dirToDelete =  await db.directory.findFirst({ where: { name: commandElements.commandParams[0], parentId: currentPath.id}});
+    if(!dirToDelete) return { list: [ 'Error: No se encontro el directorio a eliminar']};
+    await db.directory.delete({ where: { id: dirToDelete?.id}});
+}
+
 
