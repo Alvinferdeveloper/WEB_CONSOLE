@@ -54,12 +54,12 @@ export async function Cd({userId, commandElements, currentPath}:Params){
 
 
 export async function Touch({ userId, commandElements, currentPath}:Params){
-    const isDirectoryOwnedByUser = await db.directory.findFirst({ where:{ id:currentPath.id,  userId}})
-    if(!isDirectoryOwnedByUser)  return { output:{
-        list:['Error: You are not the owner of this directory']
-    }}
-    const isCurrentPathRoot = isDirectoryOwnedByUser.absolutePath == '/';
-    const fileAbsolutePath = isDirectoryOwnedByUser.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${commandElements.commandParams[0]}`);
+    const currentDirectory = await db.directory.findFirst({ where:{ id:currentPath.id,  userId}})
+    if(!currentDirectory) throw new ApiError(404, 'Resource not found');
+    const isCurrentPathRoot = currentDirectory.absolutePath == '/';
+    const fileAbsolutePath = currentDirectory.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${commandElements.commandParams[0]}`);
+    const newFileExist = await db.file.findFirst({ where: { name:commandElements.commandParams[0], directoryId:currentPath.id}});
+    if(newFileExist) return  { list: [ 'Error: Este archivo ya existe']}
     await db.file.create({data:{ name: commandElements.commandParams[0], directoryId:currentPath.id, userId, absolutePath:fileAbsolutePath}})
 
 }
