@@ -12,7 +12,7 @@ export async function Mkdir({userId, commandElements, currentPath}: Params) {
     if(!currentDirectory) throw new ApiError(404, 'Resource not found');
     const isCurrentPathRoot = currentDirectory.absolutePath == '/';
     const directoryAbsolutePath = currentDirectory.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${commandElements.commandParams[0]}`);
-    const newDirectoryExists = await db.directory.findFirst({ where: { name:commandElements.commandParams[0]}});
+    const newDirectoryExists = await db.directory.findFirst({ where: { name:commandElements.commandParams[0], parentId:currentPath.id}});
     if(newDirectoryExists) return { list: [ 'Error: Este directorio ya existe']}
     await db.directory.create({data:{ name: commandElements.commandParams[0], parentId:currentPath.id, userId, absolutePath:directoryAbsolutePath }})
 }
