@@ -36,7 +36,9 @@ export async function Cd({userId, commandElements, currentPath}:Params){
         if(currentDirectory?.parentId)
         newPath = await db.directory.findFirst({where:{ userId, id:currentDirectory?.parentId}});
     }
-        
+    else if(newPathToGo == '.'){
+        newPath = await db.directory.findFirst({where:{ userId ,id: currentPath.id}});
+    }
     else 
         newPath = await db.directory.findFirst({where:{userId, name: newPathToGo, parentId: currentPath.id}});
 
