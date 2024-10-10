@@ -22,10 +22,10 @@ export default function useCommandActions() {
             }
             else if (isCommandLocal(commandName)) {
                 commandPromptOutput = executeLocalCommand(
-                    commandName,
+                    { commandName, commandFlags, commandParams},
                     time,
                     user.name,
-                    path.absolutePath,
+                    path,
                 );
             } else if (isCommandRemote(commandName)) {
                 commandPromptOutput = await executeRemoteCommand(
