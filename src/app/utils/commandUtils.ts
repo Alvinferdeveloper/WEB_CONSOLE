@@ -3,7 +3,7 @@ import { commandDefinitions, localCommandsAvailable, remoteCommandsAvailable} fr
 export const isCommandValid = (commandValue: string, commandParams:string[], flags:string[])=>{
     const commandExists = commandDefinitions.find(command => command.commandName === commandValue);
     const areFlagsValid = flags.every(flag=> commandExists?.availableFlags.includes(flag));
-    const miniumExpectecParams = commandParams.length == commandExists?.miniumExpectedParams;
+    const miniumExpectecParams = commandParams.length >=( commandExists?.miniumExpectedParams  as number);
     console.log(commandExists, areFlagsValid, miniumExpectecParams)
     if(commandExists && areFlagsValid && miniumExpectecParams) return true;
     return false;
