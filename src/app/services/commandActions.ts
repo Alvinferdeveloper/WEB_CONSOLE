@@ -1,3 +1,4 @@
+import { helpData } from "../data/helpData";
 import { commandStore } from "../store/commandStore"
 import { BasicOutPut } from "../types/command";
 
@@ -15,7 +16,6 @@ export async function cd({ commandName, commandFlags, commandParams }: { command
         }
     }
 
-    console.log(json)
     const setPath = commandStore.getState().setPath;
     setPath({id:json.id, absolutePath:json.newPath})
     return undefined;
@@ -25,4 +25,13 @@ export async function cd({ commandName, commandFlags, commandParams }: { command
 export function clear(){
     commandStore.getState().clear();
     return Promise.resolve(); // all action need to return a promise
+}
+
+export function help({ commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }){
+    if(helpData[commandParams[0] as keyof typeof helpData]){
+        return helpData[commandParams[0] as keyof typeof helpData].output;
+    }
+    return {
+        list:['No existe entrada para este comando']
+    } 
 }

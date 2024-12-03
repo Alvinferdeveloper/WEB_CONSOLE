@@ -45,7 +45,6 @@ export const executeRemoteCommand = async ({ commandName, commandFlags, commandP
     })
 
     const commandOutput = await res.json();
-    console.log(commandOutput);
     const componentToRender = remoteCommandsAvailable[commandName.toUpperCase() as keyof typeof remoteCommandsAvailable].component;
     return {
         userName,

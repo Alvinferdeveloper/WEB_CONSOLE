@@ -1,8 +1,7 @@
 import BasicOutput from "../components/outputs/BasicOutput";
 import { Ls } from "../components/outputs/Ls"
-import { clear, cd} from "../services/commandActions";
+import { clear, cd, help} from "../services/commandActions";
 import { BasicOutPut } from "../types/command"
-import { helpData } from "./helpData";
 
 type commandDefinition = {
     commandName: string,
@@ -57,11 +56,7 @@ export const  localCommandsAvailable:Record<string, commandDefinition> =  {
             miniumExpectedParams: 1,
             availableFlags:['a','b'],
             component: BasicOutput,
-            execute : function({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }, currentPath:{id:number, absolutePath:string}){
-                if(helpData[commandParams[0] as keyof typeof helpData]){
-                    return helpData[commandParams[0] as keyof typeof helpData].output;
-                }
-            }
+            execute : help
     },
     CLEAR: {
         commandName:"clear",
