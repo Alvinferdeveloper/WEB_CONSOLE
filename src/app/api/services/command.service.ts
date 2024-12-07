@@ -1,5 +1,6 @@
 import db from "@/app/libs/db"
 import { ApiError } from "../utils/ApiError";
+import { findRoute } from "../utils/commandUtils";
 
 interface Params {
     userId:number,
@@ -36,24 +37,13 @@ export async function Ls({ userId, currentPath, commandElements }:Params){
 
 export async function Cd({userId, commandElements, currentPath}:Params){
     const newPathToGo = commandElements.commandParams[0];
-    let newPath ;
-    if(newPathToGo.startsWith('/'))
-        newPath = await db.directory.findFirst({where:{ userId, absolutePath: newPathToGo}})
-    else if(newPathToGo == '..'){
-        const currentDirectory = await db.directory.findFirst({where:{ userId ,id: currentPath.id}});
-        if(currentDirectory?.parentId)
-        newPath = await db.directory.findFirst({where:{ userId, id:currentDirectory?.parentId}});
+    const newPathFound = await findRoute(currentPath.id, newPathToGo, userId);
+    if(!newPathFound) return {
+        error: 'Directory not found',
+        outputList:['Directory not found']
     }
-    else if(newPathToGo == '.'){
-        newPath = await db.directory.findFirst({where:{ userId ,id: currentPath.id}});
-    }
-    else 
-        newPath = await db.directory.findFirst({where:{userId, name: newPathToGo, parentId: currentPath.id}});
-
-        if(!newPath) return {
-            error: 'Directory not found',
-            outputList:['Directory not found']
-        }
+    const newPath = await db.directory.findFirst({ where:{ id: newPathFound }})
+    
     return {
         id:newPath?.id,
         newPath:newPath?.absolutePath
