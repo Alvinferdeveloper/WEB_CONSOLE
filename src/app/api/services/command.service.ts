@@ -2,6 +2,7 @@ import db from "@/app/libs/db"
 import { ApiError } from "../utils/ApiError";
 import { findRoute } from "../utils/commandUtils";
 
+
 interface Params {
     userId:number,
     commandElements:  { commandName: string, commandFlags: string[], commandParams: string[]},
@@ -9,13 +10,20 @@ interface Params {
 }
 
 export async function Mkdir({userId, commandElements, currentPath}: Params) {
-    const currentDirectory = await db.directory.findFirst({ where:{ id:currentPath.id,  userId}});
-    if(!currentDirectory) throw new ApiError(404, 'Resource not found');
-    const isCurrentPathRoot = currentDirectory.absolutePath == '/';
-    const directoryAbsolutePath = currentDirectory.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${commandElements.commandParams[0]}`);
-    const newDirectoryExists = await db.directory.findFirst({ where: { name:commandElements.commandParams[0], parentId:currentPath.id}});
+    const pathWithNoNewDirectory = commandElements.commandParams[0].split("/").slice(0,-1).join();
+    const newDirectoryName = commandElements.commandParams[0].split("/").pop() || '';
+    let pathToGo = commandElements.commandParams[0].split("/").length == 1 ? '.' : pathWithNoNewDirectory;
+    if(commandElements.commandParams[0].startsWith("/")) pathToGo = '/';
+    const pathFound = await findRoute(currentPath.id, pathToGo, userId );
+    if(!pathFound) return {
+        error: 'Directory not found',
+        outputList:['Directory not found']
+    }
+    const isCurrentPathRoot = pathFound.absolutePath == '/';
+    const directoryAbsolutePath = pathFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${newDirectoryName}`);
+    const newDirectoryExists = await db.directory.findFirst({ where: { name:newDirectoryName, parentId:pathFound.id}});
     if(newDirectoryExists) return { list: [ 'Error: Este directorio ya existe']}
-    await db.directory.create({data:{ name: commandElements.commandParams[0], parentId:currentPath.id, userId, absolutePath:directoryAbsolutePath }})
+    await db.directory.create({data:{ name:newDirectoryName, parentId:pathFound.id, userId, absolutePath:directoryAbsolutePath }})
 }
 
 
@@ -42,7 +50,7 @@ export async function Cd({userId, commandElements, currentPath}:Params){
         error: 'Directory not found',
         outputList:['Directory not found']
     }
-    const newPath = await db.directory.findFirst({ where:{ id: newPathFound }})
+    const newPath = await db.directory.findFirst({ where:{ id: newPathFound.id }})
     
     return {
         id:newPath?.id,

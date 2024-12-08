@@ -6,7 +6,7 @@ export async function findRoute(currentDirectoryId: number, pathToGo: string, us
         const nextPath = await db.directory.findFirst({ where: { userId, absolutePath: pathToGo } });
         if (nextPath) {
             routeFoundId = nextPath?.id;
-            return routeFoundId;
+            return db.directory.findFirst({ where:{ id: routeFoundId}});
         }
     }
     for (let route of splitedRoute) {
@@ -31,5 +31,8 @@ export async function findRoute(currentDirectoryId: number, pathToGo: string, us
 
         }
     }
-    return routeFoundId;
+    if(routeFoundId ){
+        return await db.directory.findFirst({ where: { id: routeFoundId}})
+    }
+    return null;
 }
