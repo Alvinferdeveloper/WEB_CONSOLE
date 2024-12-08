@@ -50,7 +50,9 @@ export const executeRemoteCommand = async ({ commandName, commandFlags, commandP
         userName,
         input: commandName,
         absolutePath: currentPath.absolutePath,
-        output: commandOutput,
+        output: commandOutput.error ? {
+            list: commandOutput.outputList
+        }: commandOutput,
         time,
         component: !commandOutput.error && componentToRender ? componentToRender : BasicOutput ,
     }
