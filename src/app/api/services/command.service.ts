@@ -28,16 +28,14 @@ export async function Mkdir({userId, commandElements, currentPath}: Params) {
 
 
 export async function Ls({ userId, currentPath, commandElements }:Params){
-    let newPathResponse ;
+    let directoryToListId = currentPath.id;
     if(commandElements.commandParams[0]){
-        newPathResponse = await Cd({ userId, commandElements, currentPath});
-        if(!newPathResponse.id){
-            return newPathResponse;
-        }
+        const routeFound = await findRoute(directoryToListId, commandElements.commandParams[0], userId);
+        directoryToListId = routeFound ? routeFound.id : directoryToListId;
     }
    
-    const directoriesDoc = await db.directory.findMany({where:{ userId, parentId: newPathResponse?.id || currentPath.id}})
-    const filesDoc = await db.file.findMany({where:{ userId, directoryId: newPathResponse?.id || currentPath.id}});
+    const directoriesDoc = await db.directory.findMany({where:{ userId, parentId: directoryToListId}})
+    const filesDoc = await db.file.findMany({where:{ userId, directoryId: directoryToListId}});
     const directories = directoriesDoc.map(({id, name}) => ({id, name, type:'DIRECTORY'}));
     const files = filesDoc.map(({id ,name}) => ({id, name, type:'FILE'}));
     return [...directories, ...files]
