@@ -38,7 +38,7 @@ export async function findRoute(currentDirectoryId: number, pathToGo: string, us
 }
 
 export function divideRouteInChunks(route: string[]){
-    const routeWithNoNewResource = route.slice(0,-1).join();
+    const routeWithNoNewResource = route.slice(0,-1).join('/');
     const newResourceName = route.pop() || '';
     return {
         routeWithNoNewResource,

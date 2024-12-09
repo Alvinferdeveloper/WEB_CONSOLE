@@ -12,7 +12,7 @@ interface Params {
 export async function Mkdir({userId, commandElements, currentPath}: Params) {
     const fullRoute = commandElements.commandParams[0];
     const splitRoute = fullRoute.split("/");
-    const { routeWithNoNewResource, newResourceName} = divideRouteInChunks([...splitRoute])
+    const { routeWithNoNewResource, newResourceName} = divideRouteInChunks([...splitRoute]);
     let pathToGo = splitRoute.length == 1 ? '.' : routeWithNoNewResource;
     if(fullRoute.startsWith("/")) pathToGo = '/';
     const pathFound = await findRoute(currentPath.id, pathToGo, userId );
