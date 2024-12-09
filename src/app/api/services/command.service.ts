@@ -59,13 +59,21 @@ export async function Cd({userId, commandElements, currentPath}:Params){
 
 
 export async function Touch({ userId, commandElements, currentPath}:Params){
-    const currentDirectory = await db.directory.findFirst({ where:{ id:currentPath.id,  userId}})
-    if(!currentDirectory) throw new ApiError(404, 'Resource not found');
-    const isCurrentPathRoot = currentDirectory.absolutePath == '/';
-    const fileAbsolutePath = currentDirectory.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${commandElements.commandParams[0]}`);
-    const newFileExist = await db.file.findFirst({ where: { name:commandElements.commandParams[0], directoryId:currentPath.id}});
+    const fullRoute = commandElements.commandParams[0];
+    const splitRoute = fullRoute.split("/");
+    const { routeWithNoNewResource, newResourceName} = divideRouteInChunks([...splitRoute]);
+    let pathToGo = splitRoute.length == 1 ? '.' : routeWithNoNewResource;
+    if(fullRoute.startsWith("/")) pathToGo = '/';
+    const pathFound = await findRoute(currentPath.id, pathToGo, userId );
+    if(!pathFound) return {
+        error: 'Directory not found',
+        outputList:['Directory not found']
+    }
+    const isCurrentPathRoot = pathFound.absolutePath == '/';
+    const fileAbsolutePath = pathFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${newResourceName}`);
+    const newFileExist = await db.file.findFirst({ where: { name:newResourceName, directoryId:pathFound.id}});
     if(newFileExist) return  { list: [ 'Error: Este archivo ya existe']}
-    await db.file.create({data:{ name: commandElements.commandParams[0], directoryId:currentPath.id, userId, absolutePath:fileAbsolutePath}})
+    await db.file.create({data:{ name: newResourceName, directoryId:pathFound.id, userId, absolutePath:fileAbsolutePath}})
 
 }
 
