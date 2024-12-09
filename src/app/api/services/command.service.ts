@@ -1,6 +1,6 @@
 import db from "@/app/libs/db"
 import { ApiError } from "../utils/ApiError";
-import { findRoute } from "../utils/commandUtils";
+import {divideRouteInChunks, findRoute } from "../utils/commandUtils";
 
 
 interface Params {
@@ -10,20 +10,21 @@ interface Params {
 }
 
 export async function Mkdir({userId, commandElements, currentPath}: Params) {
-    const pathWithNoNewDirectory = commandElements.commandParams[0].split("/").slice(0,-1).join();
-    const newDirectoryName = commandElements.commandParams[0].split("/").pop() || '';
-    let pathToGo = commandElements.commandParams[0].split("/").length == 1 ? '.' : pathWithNoNewDirectory;
-    if(commandElements.commandParams[0].startsWith("/")) pathToGo = '/';
+    const fullRoute = commandElements.commandParams[0];
+    const splitRoute = fullRoute.split("/");
+    const { routeWithNoNewResource, newResourceName} = divideRouteInChunks([...splitRoute])
+    let pathToGo = splitRoute.length == 1 ? '.' : routeWithNoNewResource;
+    if(fullRoute.startsWith("/")) pathToGo = '/';
     const pathFound = await findRoute(currentPath.id, pathToGo, userId );
     if(!pathFound) return {
         error: 'Directory not found',
         outputList:['Directory not found']
     }
     const isCurrentPathRoot = pathFound.absolutePath == '/';
-    const directoryAbsolutePath = pathFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${newDirectoryName}`);
-    const newDirectoryExists = await db.directory.findFirst({ where: { name:newDirectoryName, parentId:pathFound.id}});
+    const directoryAbsolutePath = pathFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${newResourceName}`);
+    const newDirectoryExists = await db.directory.findFirst({ where: { name:newResourceName, parentId:pathFound.id}});
     if(newDirectoryExists) return { list: [ 'Error: Este directorio ya existe']}
-    await db.directory.create({data:{ name:newDirectoryName, parentId:pathFound.id, userId, absolutePath:directoryAbsolutePath }})
+    await db.directory.create({data:{ name:newResourceName, parentId:pathFound.id, userId, absolutePath:directoryAbsolutePath }})
 }
 
 
