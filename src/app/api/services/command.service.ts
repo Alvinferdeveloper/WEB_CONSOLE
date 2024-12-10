@@ -1,7 +1,5 @@
 import db from "@/app/libs/db"
-import { ApiError } from "../utils/ApiError";
-import {divideRouteInChunks, findRoute } from "../utils/commandUtils";
-
+import { findPathToGo, findPath } from "../utils/commandUtils";
 
 interface Params {
     userId:number,
@@ -10,28 +8,24 @@ interface Params {
 }
 
 export async function Mkdir({userId, commandElements, currentPath}: Params) {
-    const fullRoute = commandElements.commandParams[0];
-    const splitRoute = fullRoute.split("/");
-    const { routeWithNoNewResource, newResourceName} = divideRouteInChunks([...splitRoute]);
-    let pathToGo = splitRoute.length == 1 ? '.' : routeWithNoNewResource;
-    if(fullRoute.startsWith("/")) pathToGo = '/';
-    const pathFound = await findRoute(currentPath.id, pathToGo, userId );
+    const { pathToGo, resourceName} = findPathToGo(commandElements.commandParams[0])
+    const pathFound = await findPath(currentPath.id, pathToGo, userId );
     if(!pathFound) return {
         error: 'Directory not found',
         outputList:['Directory not found']
     }
     const isCurrentPathRoot = pathFound.absolutePath == '/';
-    const directoryAbsolutePath = pathFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${newResourceName}`);
-    const newDirectoryExists = await db.directory.findFirst({ where: { name:newResourceName, parentId:pathFound.id}});
+    const directoryAbsolutePath = pathFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${resourceName}`);
+    const newDirectoryExists = await db.directory.findFirst({ where: { name:resourceName, parentId:pathFound.id}});
     if(newDirectoryExists) return { list: [ 'Error: Este directorio ya existe']}
-    await db.directory.create({data:{ name:newResourceName, parentId:pathFound.id, userId, absolutePath:directoryAbsolutePath }})
+    await db.directory.create({data:{ name:resourceName, parentId:pathFound.id, userId, absolutePath:directoryAbsolutePath }})
 }
 
 
 export async function Ls({ userId, currentPath, commandElements }:Params){
     let directoryToListId = currentPath.id;
     if(commandElements.commandParams[0]){
-        const routeFound = await findRoute(directoryToListId, commandElements.commandParams[0], userId);
+        const routeFound = await findPath(directoryToListId, commandElements.commandParams[0], userId);
         directoryToListId = routeFound ? routeFound.id : directoryToListId;
     }
    
@@ -44,13 +38,12 @@ export async function Ls({ userId, currentPath, commandElements }:Params){
 
 export async function Cd({userId, commandElements, currentPath}:Params){
     const newPathToGo = commandElements.commandParams[0];
-    const newPathFound = await findRoute(currentPath.id, newPathToGo, userId);
+    const newPathFound = await findPath(currentPath.id, newPathToGo, userId);
     if(!newPathFound) return {
         error: 'Directory not found',
         outputList:['Directory not found']
     }
     const newPath = await db.directory.findFirst({ where:{ id: newPathFound.id }})
-    
     return {
         id:newPath?.id,
         newPath:newPath?.absolutePath
@@ -59,37 +52,29 @@ export async function Cd({userId, commandElements, currentPath}:Params){
 
 
 export async function Touch({ userId, commandElements, currentPath}:Params){
-    const fullRoute = commandElements.commandParams[0];
-    const splitRoute = fullRoute.split("/");
-    const { routeWithNoNewResource, newResourceName} = divideRouteInChunks([...splitRoute]);
-    let pathToGo = splitRoute.length == 1 ? '.' : routeWithNoNewResource;
-    if(fullRoute.startsWith("/")) pathToGo = '/';
-    const pathFound = await findRoute(currentPath.id, pathToGo, userId );
+    const { pathToGo,  resourceName } = findPathToGo(commandElements.commandParams[0]);
+    const pathFound = await findPath(currentPath.id, pathToGo, userId );
     if(!pathFound) return {
         error: 'Directory not found',
         outputList:['Directory not found']
     }
     const isCurrentPathRoot = pathFound.absolutePath == '/';
-    const fileAbsolutePath = pathFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${newResourceName}`);
-    const newFileExist = await db.file.findFirst({ where: { name:newResourceName, directoryId:pathFound.id}});
+    const fileAbsolutePath = pathFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${resourceName}`);
+    const newFileExist = await db.file.findFirst({ where: { name:resourceName, directoryId:pathFound.id}});
     if(newFileExist) return  { list: [ 'Error: Este archivo ya existe']}
-    await db.file.create({data:{ name: newResourceName, directoryId:pathFound.id, userId, absolutePath:fileAbsolutePath}})
+    await db.file.create({data:{ name: resourceName, directoryId:pathFound.id, userId, absolutePath:fileAbsolutePath}})
 
 }
 
 
 export async function Rm({ userId, commandElements, currentPath}:Params){
-    const fullRoute = commandElements.commandParams[0];
-    const splitRoute = fullRoute.split("/");
-    const { routeWithNoNewResource, newResourceName} = divideRouteInChunks([...splitRoute]);
-    let pathToGo = splitRoute.length == 1 ? '.' : routeWithNoNewResource;
-    if(fullRoute.startsWith("/")) pathToGo = '/';
-    const pathFound = await findRoute(currentPath.id, pathToGo, userId );
+   const { pathToGo, resourceName } = findPathToGo(commandElements.commandParams[0])
+    const pathFound = await findPath(currentPath.id, pathToGo, userId );
     if(!pathFound) return {
         error: 'Directory not found',
         outputList:['Directory not found']
     }
-    const fileToDelete = await db.file.findFirst({ where: { name: newResourceName, directoryId: pathFound.id}});
+    const fileToDelete = await db.file.findFirst({ where: { name: resourceName, directoryId: pathFound.id}});
     if(!fileToDelete) return { list: [ 'Error: No se encontro el archivo a eliminar']};
     await db.file.delete({ where: { id: fileToDelete?.id}});
 

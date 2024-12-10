@@ -1,5 +1,5 @@
 import db from "@/app/libs/db";
-export async function findRoute(currentDirectoryId: number, pathToGo: string, userId: number) {
+export async function findPath(currentDirectoryId: number, pathToGo: string, userId: number) {
     const splitedRoute = pathToGo.split('/');
     let routeFoundId;
     if (pathToGo.startsWith('/')) {
@@ -38,11 +38,19 @@ export async function findRoute(currentDirectoryId: number, pathToGo: string, us
 }
 
 export function divideRouteInChunks(route: string[]){
-    const routeWithNoNewResource = route.slice(0,-1).join('/');
-    const newResourceName = route.pop() || '';
+    const routeWithNoResource = route.slice(0,-1).join('/');
+    const resourceName = route.pop() || '';
     return {
-        routeWithNoNewResource,
-        newResourceName
+        routeWithNoResource,
+        resourceName
     }
 
+}
+
+export function findPathToGo(fullRoute: string){
+    const splitRoute = fullRoute.split("/");
+    const { routeWithNoResource, resourceName} = divideRouteInChunks([...splitRoute]);
+    let pathToGo = splitRoute.length == 1 ? '.' : routeWithNoResource;
+    if(fullRoute.startsWith("/")) pathToGo = '/';
+    return { pathToGo,  resourceName }
 }
