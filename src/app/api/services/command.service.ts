@@ -79,7 +79,17 @@ export async function Touch({ userId, commandElements, currentPath}:Params){
 
 
 export async function Rm({ userId, commandElements, currentPath}:Params){
-    const fileToDelete = await db.file.findFirst({ where: { name: commandElements.commandParams[0], directoryId: currentPath.id}});
+    const fullRoute = commandElements.commandParams[0];
+    const splitRoute = fullRoute.split("/");
+    const { routeWithNoNewResource, newResourceName} = divideRouteInChunks([...splitRoute]);
+    let pathToGo = splitRoute.length == 1 ? '.' : routeWithNoNewResource;
+    if(fullRoute.startsWith("/")) pathToGo = '/';
+    const pathFound = await findRoute(currentPath.id, pathToGo, userId );
+    if(!pathFound) return {
+        error: 'Directory not found',
+        outputList:['Directory not found']
+    }
+    const fileToDelete = await db.file.findFirst({ where: { name: newResourceName, directoryId: pathFound.id}});
     if(!fileToDelete) return { list: [ 'Error: No se encontro el archivo a eliminar']};
     await db.file.delete({ where: { id: fileToDelete?.id}});
 
