@@ -47,6 +47,11 @@ export const remoteCommandsAvailable : Record<string, commandDefinition> = {
         commandName:'rmdir',
         miniumExpectedParams:1,
         availableFlags:[]
+    },
+    MV: {
+        commandName:'mv',
+        miniumExpectedParams:2,
+        availableFlags:[]
     }
 }
 
