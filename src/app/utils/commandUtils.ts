@@ -31,7 +31,7 @@ export const parseCommand = (command:string) => {
     const commandName = splitedCommand[0];
     const commandFlags = splitedCommand.filter( value => value.startsWith('-') || value.startsWith('--'));
     const lastFlagindex = splitedCommand.reverse().findIndex(value => value.startsWith('--') ||  value.startsWith('-'));
-    const commandParams = splitedCommand.slice(0, lastFlagindex);
+    const commandParams = splitedCommand.slice(0, lastFlagindex).reverse();
     return {
         commandName,
         commandFlags,
