@@ -6,6 +6,7 @@ export const commandExecutables = {
     cd:commandServices.Cd,
     touch: commandServices.Touch,
     rm: commandServices.Rm,
-    rmdir: commandServices.Rmdir
+    rmdir: commandServices.Rmdir,
+    mv: commandServices.Mv
 }
 
