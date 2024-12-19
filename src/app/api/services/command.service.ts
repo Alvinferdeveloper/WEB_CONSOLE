@@ -106,11 +106,13 @@ export async function Mv({ userId, commandElements, currentPath }: Params) {
         const typeOfFile = await getTypeOfFile(pathToMoveFound.id, fileToMoveName);
         fileToMoveName = targetDirectory || targetFileName == "." || targetFileName == ".." ? fileToMoveName : targetFileName;
         targetDirectory = targetDirectory ? targetDirectory : pathToPasteFound;
+        const isCurrentPathRoot = targetDirectory.absolutePath == '/';
+        const newAbsolutePath = targetDirectory.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${fileToMoveName}`);
         if (typeOfFile == TYPE_OF_FILES.DIRECTORY) {
-            await db.directory.update({ where: { id: fileToMove.id }, data: { name: fileToMoveName, parentId: targetDirectory.id } });
+            await db.directory.update({ where: { id: fileToMove.id }, data: { name: fileToMoveName, parentId: targetDirectory.id, absolutePath: newAbsolutePath } });
         }
         else if (typeOfFile == TYPE_OF_FILES.REGULAR_FILE) {
-            await db.file.update({ where: { id: fileToMove.id }, data: { name: fileToMoveName, directoryId: targetDirectory.id } })
+            await db.file.update({ where: { id: fileToMove.id }, data: { name: fileToMoveName, directoryId: targetDirectory.id, absolutePath: newAbsolutePath } })
         }
     }
 
