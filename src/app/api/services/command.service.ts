@@ -114,6 +114,11 @@ export async function Mv({ userId, commandElements, currentPath }: Params) {
         else if (typeOfFile == TYPE_OF_FILES.REGULAR_FILE) {
             await db.file.update({ where: { id: fileToMove.id }, data: { name: fileToMoveName, directoryId: targetDirectory.id, absolutePath: newAbsolutePath } })
         }
+    }else {
+        return {
+            error: 'some path does not exist',
+            outputList: ['Some of the path specified is invalid']
+        }
     }
 
 }
