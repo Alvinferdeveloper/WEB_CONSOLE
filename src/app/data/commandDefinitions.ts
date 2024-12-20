@@ -52,6 +52,11 @@ export const remoteCommandsAvailable : Record<string, commandDefinition> = {
         commandName:'mv',
         miniumExpectedParams:2,
         availableFlags:[]
+    },
+    CP: {
+        commandName: 'cp',
+        miniumExpectedParams:2,
+        availableFlags:[]
     }
 }
 
