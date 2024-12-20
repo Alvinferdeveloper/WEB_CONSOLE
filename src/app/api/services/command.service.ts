@@ -114,11 +114,20 @@ export async function Mv({ userId, commandElements, currentPath }: Params) {
         targetDirectory = targetDirectory ? targetDirectory : pathToPasteFound;
         const isCurrentPathRoot = targetDirectory.absolutePath == '/';
         const newAbsolutePath = targetDirectory.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${fileToMoveName}`);
+        let resourceToMoveExist = null;
         if (typeOfFile == TYPE_OF_FILES.DIRECTORY) {
-            await db.directory.update({ where: { id: fileToMove.id }, data: { name: fileToMoveName, parentId: targetDirectory.id, absolutePath: newAbsolutePath } });
+            resourceToMoveExist= await db.directory.findFirst({ where: { name: fileToMoveName, parentId: targetDirectory.id } }); 
+            !resourceToMoveExist && await db.directory.update({ where: { id: fileToMove.id }, data: { name: fileToMoveName, parentId: targetDirectory.id, absolutePath: newAbsolutePath } });
         }
         else if (typeOfFile == TYPE_OF_FILES.REGULAR_FILE) {
-            await db.file.update({ where: { id: fileToMove.id }, data: { name: fileToMoveName, directoryId: targetDirectory.id, absolutePath: newAbsolutePath } })
+            resourceToMoveExist = await db.file.findFirst({ where: { name: fileToMove.name, directoryId: targetDirectory.id }});
+            !resourceToMoveExist && await db.file.update({ where: { id: fileToMove.id }, data: { name: fileToMoveName, directoryId: targetDirectory.id, absolutePath: newAbsolutePath } });
+        }
+        if( resourceToMoveExist){
+            return {
+                error: 'repeated file',
+                outputList: ['This file already exists in the current directory']
+            }
         }
     }else {
         return {
