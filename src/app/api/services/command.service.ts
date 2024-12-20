@@ -97,7 +97,7 @@ export async function Mv({ userId, commandElements, currentPath }: Params) {
     const resources = commandElements.commandParams;
     let { pathToGo: pathToMove, resourceName: fileToMoveName } = findPathToGo(resources[0]);
     let { pathToGo: pathToPaste, resourceName: targetFileName } = findPathToGo(resources[1]);
-    pathToPaste = targetFileName == ".." ? ".." : pathToMove
+    pathToPaste = targetFileName == ".." ? ".." : pathToPaste
     const pathToMoveFound = await findPath(currentPath.id, pathToMove, userId);
     const pathToPasteFound = await findPath(currentPath.id, pathToPaste, userId);
     const fileToMove = await findFile(pathToMoveFound?.id || -1, fileToMoveName);
