@@ -38,6 +38,12 @@ export async function Ls({ userId, currentPath, commandElements }: Params) {
 }
 
 export async function Cd({ userId, commandElements, currentPath }: Params) {
+    if(commandElements.commandParams.length > 1){
+        return {
+            error: 'Too many params',
+            outputList: ['cd: too many arguments']
+        }
+    }
     const newPathToGo = commandElements.commandParams[0];
     const newPathFound = await findPath(currentPath.id, newPathToGo, userId);
     if (!newPathFound) return {
