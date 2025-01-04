@@ -9,17 +9,19 @@ interface Params {
 }
 
 export async function Mkdir({ userId, commandElements, currentPath }: Params) {
-    const { pathToGo, resourceName } = findPathToGo(commandElements.commandParams[0])
-    const pathFound = await findPath(currentPath.id, pathToGo, userId);
-    if (!pathFound) return {
+    for(let commandName of commandElements.commandParams) {
+        const { pathToGo, resourceName } = findPathToGo(commandName)
+        const pathFound = await findPath(currentPath.id, pathToGo, userId);
+        if (!pathFound) return {
         error: 'Directory not found',
         outputList: ['Directory not found']
+        }
+        const isCurrentPathRoot = pathFound.absolutePath == '/';
+        const directoryAbsolutePath = pathFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${resourceName}`);
+        const newDirectoryExists = await db.directory.findFirst({ where: { name: resourceName, parentId: pathFound.id } });
+        if (newDirectoryExists) return { list: [`Error: El  directorio ${commandName}  ya existe`] }
+        await db.directory.create({ data: { name: resourceName, parentId: pathFound.id, userId, absolutePath: directoryAbsolutePath } })
     }
-    const isCurrentPathRoot = pathFound.absolutePath == '/';
-    const directoryAbsolutePath = pathFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${resourceName}`);
-    const newDirectoryExists = await db.directory.findFirst({ where: { name: resourceName, parentId: pathFound.id } });
-    if (newDirectoryExists) return { list: ['Error: Este directorio ya existe'] }
-    await db.directory.create({ data: { name: resourceName, parentId: pathFound.id, userId, absolutePath: directoryAbsolutePath } })
 }
 
 
