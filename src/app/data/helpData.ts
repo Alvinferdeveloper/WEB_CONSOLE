@@ -1,5 +1,4 @@
 
-import Help from "../components/outputs/Help"
 export const helpData = {
         cp:{
             output:{
