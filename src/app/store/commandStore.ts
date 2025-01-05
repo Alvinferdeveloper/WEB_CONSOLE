@@ -13,6 +13,7 @@ type Actions = {
    addNewCommandExecution: (commandExecution:CommandPromptOutput) => void;
    clear:()=>void;
    setPath:({id, absolutePath}:{id:number, absolutePath:string}) => void;
+   reset: ()=>void;
 }
 
 export const commandStore = create<States & Actions>((set,get)=>(
@@ -24,7 +25,8 @@ export const commandStore = create<States & Actions>((set,get)=>(
         setPath:({id, absolutePath}) => set({ path:{
             id,
             absolutePath
-        } })
+        } }),
+        reset:()=> set({ commandsExecutions:[], path:{id:0, absolutePath:'/'} })
         
     }
 ))

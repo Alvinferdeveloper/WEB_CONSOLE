@@ -1,6 +1,6 @@
 import BasicOutput from "../components/outputs/BasicOutput";
 import { Ls } from "../components/outputs/Ls"
-import { clear, cd } from "../services/commandActions";
+import { clear, cd, logOutAction } from "../services/commandActions";
 import { help } from "../services/localCommands";
 import { BasicOutPut } from "../types/command"
 
@@ -74,6 +74,12 @@ export const  localCommandsAvailable:Record<string, commandDefinition> =  {
         miniumExpectedParams:0,
         availableFlags:[],
         accionNeeded: clear,
+    },
+    LOGOUT: {
+        commandName:"logout",
+        miniumExpectedParams:0,
+        availableFlags:[],
+        accionNeeded:logOutAction
     }
 }
 

@@ -7,12 +7,14 @@ type States = {
 
 type Actions = {
     setUser: (user: User) => void,
+    reset: ()=>void
 }
 
-export const useUserStore = create<States & Actions>((set,get)=>(
+export const userStore = create<States & Actions>((set,get)=>(
     {
         user: null,
-        setUser: (user: User) =>set({ user })
+        setUser: (user: User) =>set({ user }),
+        reset: () => set({ user:null })
     }
 ))
 
