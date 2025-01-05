@@ -1,6 +1,7 @@
 import BasicOutput from "../components/outputs/BasicOutput";
 import { Ls } from "../components/outputs/Ls"
-import { clear, cd, help} from "../services/commandActions";
+import { clear, cd } from "../services/commandActions";
+import { help } from "../services/localCommands";
 import { BasicOutPut } from "../types/command"
 
 type commandDefinition = {

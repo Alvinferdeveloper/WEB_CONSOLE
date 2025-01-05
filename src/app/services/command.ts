@@ -7,7 +7,7 @@ export  const  executeActionCommand = async ({ commandName, commandFlags, comman
     const commandAction = commandDefinitions.find(command => command.commandName === commandName);
     if(commandAction?.accionNeeded) {
          const output = await commandAction.accionNeeded({ commandName, commandFlags, commandParams},currentPath);
-         if( commandName == 'clear') return undefined;
+         if( !output ) return undefined;
          return {
             input: commandName,
             output,
