@@ -1,6 +1,6 @@
 import { CommandPromptOutput } from "../types/command";
 import BasicOutput from "../components/outputs/BasicOutput";
-import { commandDefinitions, localCommandsAvailable, remoteCommandsAvailable } from "../data/commandDefinitions";
+import { commandDefinitions, remoteCommandsAvailable } from "../data/commandDefinitions";
 
 
 export  const  executeActionCommand = async ({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }, time:string, userName:string, currentPath:{id:number, absolutePath:string} ):Promise<CommandPromptOutput | void>=>{
@@ -45,7 +45,7 @@ export const executeRemoteCommand = async ({ commandName, commandFlags, commandP
     })
 
     const commandOutput = await res.json();
-    const componentToRender = remoteCommandsAvailable[commandName.toUpperCase() as keyof typeof remoteCommandsAvailable].component;
+    const componentToRender = remoteCommandsAvailable[commandName.toUpperCase()].component;
     return {
         userName,
         input: commandName,

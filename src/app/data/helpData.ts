@@ -1,9 +1,14 @@
-
-export const helpData = {
-        cp:{
-            output:{
-                list:["Cp: Permite copiar de un archivo a otro"],
-                },
+type Data = {
+        output: {
+                list: string[]
         }
-   
+}
+export const helpData: Record<string, Data>  = {
+        cp: {
+                output: {
+                        list: [
+                                'cp - Copia archivos o directorios',
+                        ]
+                }
+        }
 }
