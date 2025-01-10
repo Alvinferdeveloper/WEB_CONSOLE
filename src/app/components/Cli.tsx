@@ -1,12 +1,15 @@
 "use client"
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, KeyboardEvent } from "react";
 import { commandStore } from "../store/commandStore";
 import Commands from "./Commands";
 import Prompt from "./Prompt";
 import { useSession } from "next-auth/react";
 import { inconsolata } from "../fonts/nextfonts";
 import useFiglet from "../hooks/useFiglet";
+import { useState } from "react";
 import SignInPrompts from "./SignInPrompt";
+import InputPrompt from "./InputPrompt";
+import RegisterPrompt from "./RegisterPrompt";
 
 
 
@@ -15,6 +18,8 @@ export default function Cli() {
     const cliRef = useRef<HTMLDivElement>(null);
     const { data: session, status } = useSession();
     const { banner} = useFiglet(session?.user.name || '');
+    const [ accountOption, setAccountOption] = useState('');
+    const [ register, setRegister] = useState<boolean | null>(null);
     useEffect(() => {
         setScroll();
     }, [commandsExecutions]);
@@ -23,6 +28,13 @@ export default function Cli() {
     function setScroll() {
         if (cliRef.current) {
             cliRef.current.scrollTop = cliRef.current.scrollHeight
+        }
+    }
+
+    const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            if(accountOption.toUpperCase() === "Y") setRegister(false);
+            if(accountOption.toUpperCase() === "N") setRegister(true);
         }
     }
 
@@ -36,9 +48,15 @@ export default function Cli() {
             {
                 status == 'authenticated' && <Prompt/>
             }
-
+            
             {
-                status == 'unauthenticated' && <SignInPrompts/>
+                status == 'unauthenticated' && register === null && <InputPrompt handleKeyDown={handleKeyDown} setInputData={setAccountOption} inputData={accountOption} promptInfo={{tittle: "Do you already have an account (y/n)"}} focused={true}/>
+            }
+            {
+                register && !session && <RegisterPrompt/>
+            }
+            {
+                register === false && !session && <SignInPrompts/> 
             }
         </div>
 
