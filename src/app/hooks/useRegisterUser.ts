@@ -17,7 +17,8 @@ export default function useRegisterUser(){
                 body: JSON.stringify(user)
             });
             if(!res.ok){
-                throw new Error("Datos invalidos, por favor vuelve a ingresarlos");
+                const error = await res.json();
+                throw new Error(error.message);
             }
             await signIn('credentials', { user: user.username, password: user.password, redirect: false })
         }catch(err){

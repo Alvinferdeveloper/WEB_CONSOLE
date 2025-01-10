@@ -1,5 +1,5 @@
 import { ApiError } from "../utils/ApiError"
-import isUserValid from "../utils/validation"
+import { isUserValid } from "../utils/validation"
 import db from "@/app/libs/db"
 
 interface User {
@@ -11,7 +11,11 @@ interface User {
 }
 export async function register(user: User){
     if( !isUserValid(user) ){
-        throw new ApiError(422, "Invalid user data");
+        throw new ApiError(422, "El usuario no es valido");
+    }
+    const userExist = await db.user.findFirst({ where: { username: user.name}});
+    if( userExist ){
+      throw new ApiError(409, "El nombre de usuario ya existe");
     }
     const { userDoc } = await db.$transaction(async (db) => {
         const userDoc = await db.user.create({ data: user});

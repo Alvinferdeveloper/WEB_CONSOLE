@@ -5,7 +5,7 @@ interface User {
     username: string,
     password: string
 }
-export default function isUserValid(user: User){
+export function isUserValid(user: User){
     const { name, email, lastName, username, password } = user;
     const passwordValid = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).test(password);
     const emailValid = new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/).test(email);
