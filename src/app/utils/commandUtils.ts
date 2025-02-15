@@ -17,10 +17,6 @@ export const isCommandRemote = (commandValue:string) => {
     return Object.values(remoteCommandsAvailable).some(remoteCommand => remoteCommand.commandName == commandValue );
 }
 
-export const isCommandClear = (commandValue:string) => {
-    return commandValue == "clear";
-}
-
 export const isCommandWithActionNeeded = (commandValue:string) => {   
     return Object.values( commandDefinitions ).some(command => command.commandName === commandValue && command.accionNeeded)
  }
