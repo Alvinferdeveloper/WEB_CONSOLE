@@ -1,5 +1,4 @@
 import { ApiError } from "../utils/ApiError"
-import { isUserValid } from "../utils/validation"
 import db from "@/app/libs/db"
 
 interface User {
@@ -10,9 +9,6 @@ interface User {
     password: string
 }
 export async function register(user: User){
-    if( !isUserValid(user) ){
-        throw new ApiError(422, "El usuario no es valido");
-    }
     const userExist = await db.user.findFirst({ where: { username: user.name}});
     if( userExist ){
       throw new ApiError(409, "El nombre de usuario ya existe");
