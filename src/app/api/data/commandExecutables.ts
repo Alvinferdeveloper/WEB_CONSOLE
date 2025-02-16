@@ -1,6 +1,7 @@
 import * as commandServices from '../services/command.service'
 
-export const commandExecutables = {
+type commandExecution = (params: commandServices.commandExecutionParams)=> any;
+export const commandExecutables : Record<string, commandExecution> = {   
     mkdir:commandServices.Mkdir,
     ls: commandServices.Ls,
     cd:commandServices.Cd,

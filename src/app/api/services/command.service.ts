@@ -2,13 +2,13 @@ import db from "@/app/libs/db"
 import { findPathToGo, findPath, getTypeOfFile, findFile } from "../utils/commandUtils";
 import { TYPE_OF_FILES } from "../constants";
 
-interface Params {
+export interface commandExecutionParams {
     userId: number,
     commandElements: { commandName: string, commandFlags: string[], commandParams: string[] },
     currentPath: { id: number, absolutePath: string }
 }
 
-export async function Mkdir({ userId, commandElements, currentPath }: Params) {
+export async function Mkdir({ userId, commandElements, currentPath }: commandExecutionParams) {
     for(let commandName of commandElements.commandParams) {
         const { pathToGo, resourceName } = findPathToGo(commandName)
         const pathFound = await findPath(currentPath.id, pathToGo, userId);
@@ -25,7 +25,7 @@ export async function Mkdir({ userId, commandElements, currentPath }: Params) {
 }
 
 
-export async function Ls({ userId, currentPath, commandElements }: Params) {
+export async function Ls({ userId, currentPath, commandElements }: commandExecutionParams) {
     let directoryToListId = currentPath.id;
     if (commandElements.commandParams[0]) {
         const routeFound = await findPath(directoryToListId, commandElements.commandParams[0], userId);
@@ -39,7 +39,7 @@ export async function Ls({ userId, currentPath, commandElements }: Params) {
     return [...directories, ...files]
 }
 
-export async function Cd({ userId, commandElements, currentPath }: Params) {
+export async function Cd({ userId, commandElements, currentPath }: commandExecutionParams) {
     if(commandElements.commandParams.length > 1){
         return {
             error: 'Too many params',
@@ -60,7 +60,7 @@ export async function Cd({ userId, commandElements, currentPath }: Params) {
 }
 
 
-export async function Touch({ userId, commandElements, currentPath }: Params) {
+export async function Touch({ userId, commandElements, currentPath }: commandExecutionParams) {
     const { pathToGo, resourceName } = findPathToGo(commandElements.commandParams[0]);
     const pathFound = await findPath(currentPath.id, pathToGo, userId);
     if (!pathFound) return {
@@ -76,7 +76,7 @@ export async function Touch({ userId, commandElements, currentPath }: Params) {
 }
 
 
-export async function Rm({ userId, commandElements, currentPath }: Params) {
+export async function Rm({ userId, commandElements, currentPath }: commandExecutionParams) {
     const { pathToGo, resourceName } = findPathToGo(commandElements.commandParams[0])
     const pathFound = await findPath(currentPath.id, pathToGo, userId);
     if (!pathFound) return {
@@ -89,7 +89,7 @@ export async function Rm({ userId, commandElements, currentPath }: Params) {
 
 }
 
-export async function Rmdir({ userId, commandElements, currentPath }: Params) {
+export async function Rmdir({ userId, commandElements, currentPath }: commandExecutionParams) {
     const { pathToGo, resourceName } = findPathToGo(commandElements.commandParams[0])
     const pathFound = await findPath(currentPath.id, pathToGo, userId);
     if (!pathFound) return {
@@ -101,7 +101,7 @@ export async function Rmdir({ userId, commandElements, currentPath }: Params) {
     await db.directory.delete({ where: { id: dirToDelete?.id } });
 }
 
-export async function Mv({ userId, commandElements, currentPath }: Params) {
+export async function Mv({ userId, commandElements, currentPath }: commandExecutionParams) {
     const resources = commandElements.commandParams;
     let { pathToGo: pathToMove, resourceName: fileToMoveName } = findPathToGo(resources[0]);
     let { pathToGo: pathToPaste, resourceName: targetFileName } = findPathToGo(resources[1]);
@@ -140,7 +140,7 @@ export async function Mv({ userId, commandElements, currentPath }: Params) {
 
 }
 
-export async function Cp({ userId, commandElements, currentPath }: Params){
+export async function Cp({ userId, commandElements, currentPath }: commandExecutionParams){
     const resources= commandElements.commandParams;
     const copyFrom = resources[0];
     let copyTo = resources[1];
