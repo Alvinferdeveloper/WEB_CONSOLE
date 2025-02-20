@@ -1,6 +1,7 @@
 import { useState, KeyboardEvent } from "react";
 import InputPrompt from "./InputPrompt";
 import useRegisterUser from "../hooks/useRegisterUser";
+
 export default function SignInPrompts(){
     const [ name, setName ] = useState('');
     const [ email, setEmail ] = useState('');
@@ -32,8 +33,9 @@ export default function SignInPrompts(){
     return (
       <>
       {
-        errorMessage && <p>{errorMessage}</p>
+        errorMessage.split(/\n/).map((err, index) => <p key={index}>{err}</p>)
       }
+      <br />
        {
          stepCount > 0  && <InputPrompt handleKeyDown={handleUsernameInputKeyDown} setInputData={setUsername} inputData={username} promptInfo={{ tittle: "Ingrese un nombre de usuario"}} focused={ stepCount == 1}/> 
        }
