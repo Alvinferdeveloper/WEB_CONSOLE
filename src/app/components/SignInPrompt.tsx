@@ -2,7 +2,6 @@ import { useState, KeyboardEvent } from "react";
 import InputPrompt from "./InputPrompt";
 import { signIn } from "next-auth/react";
 
-
 export default function SignInPrompts(){
     const [showPassword, setShowPassword] = useState(false);
     const [username, setUsername] = useState("");

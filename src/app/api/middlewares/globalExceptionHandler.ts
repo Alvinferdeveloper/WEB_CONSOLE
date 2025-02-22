@@ -1,9 +1,5 @@
-
-import { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { ApiError } from "../utils/ApiError";
-
-
 
 const globalExceptionHandler = (fn:(req:Request)=>Promise<any>) => async (req:Request) => {
     try{

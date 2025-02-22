@@ -11,8 +11,6 @@ import SignInPrompts from "./SignInPrompt";
 import InputPrompt from "./InputPrompt";
 import RegisterPrompt from "./RegisterPrompt";
 
-
-
 export default function Cli() {
     const { commandsExecutions } = commandStore();
     const cliRef = useRef<HTMLDivElement>(null);

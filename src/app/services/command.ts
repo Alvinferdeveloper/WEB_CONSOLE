@@ -2,7 +2,6 @@ import { CommandPromptOutput } from "../types/command";
 import BasicOutput from "../components/outputs/BasicOutput";
 import { commandDefinitions, remoteCommandsAvailable } from "../data/commandDefinitions";
 
-
 export  const  executeActionCommand = async ({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }, time:string, userName:string, currentPath:{id:number, absolutePath:string} ):Promise<CommandPromptOutput | void>=>{
     const commandAction = commandDefinitions.find(command => command.commandName === commandName);
     if(commandAction?.accionNeeded) {

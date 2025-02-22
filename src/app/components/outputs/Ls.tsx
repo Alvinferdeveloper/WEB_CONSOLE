@@ -1,4 +1,3 @@
-
 import { LsOutPut } from "@/app/types/command"
 export function Ls({output}:{output: LsOutPut}) {
     return (

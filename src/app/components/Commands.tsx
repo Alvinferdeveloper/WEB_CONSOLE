@@ -1,4 +1,3 @@
-
 import { CommandPromptOutputs as Comm } from "../types/command";
 export default function Commands({ commands }: { commands: Comm }) {
     return commands.map((command, index) => (

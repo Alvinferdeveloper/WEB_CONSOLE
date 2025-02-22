@@ -4,15 +4,10 @@ import {
   useEffect,
   useState,
 } from "react";
-import { commandStore } from "../store/commandStore";
 import { useSession } from "next-auth/react";
 import InputPrompt from "./InputPrompt";
-import { Session } from "next-auth";
-import { useUserStore } from "../store/userStore";
 import useCommandActions from "../hooks/useCommandActions";
 import useGetinitalPath from "../hooks/useGetInitialPath";
-
-
 
 export default function Prompt() {
   const [currentCommandTime, setCurrentCommandTime] = useState<string>("");
