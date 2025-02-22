@@ -34,7 +34,7 @@ export default function SignInPrompts(){
       }
       <InputPrompt handleKeyDown={handleUsernameInputKeyDown} setInputData={setUsername} inputData={username} promptInfo={{tittle:"Usuario"}} focused ={!showPassword} />
       {
-        showPassword && <InputPrompt handleKeyDown={handleSignin} setInputData={setPassword} inputData={password} promptInfo={{tittle:"Password"}} focused = {showPassword} />
+        showPassword && <InputPrompt handleKeyDown={handleSignin} setInputData={setPassword} inputData={password} promptInfo={{tittle:"Password"}} focused = {showPassword} type="password" />
       }
       </>
     )

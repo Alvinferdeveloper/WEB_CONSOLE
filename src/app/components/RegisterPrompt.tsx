@@ -49,7 +49,7 @@ export default function SignInPrompts(){
          stepCount > 3 && <InputPrompt handleKeyDown={handleUsernameInputKeyDown} setInputData={setEmail} inputData={email} promptInfo={{ tittle: "Ingrese su email" }} focused={ stepCount == 4}/> 
        }
        {
-        stepCount > 4 && <InputPrompt handleKeyDown={handleRegister} setInputData={setPassword} inputData={ password } promptInfo={{ tittle: "Escriba una contraseña"}} focused={ stepCount == 5}/> 
+        stepCount > 4 && <InputPrompt handleKeyDown={handleRegister} setInputData={setPassword} inputData={ password } promptInfo={{ tittle: "Escriba una contraseña"}} focused={ stepCount == 5} type="password"/> 
        }  
       </>
     )

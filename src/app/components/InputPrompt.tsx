@@ -1,10 +1,8 @@
-import { useRef, KeyboardEvent, useState, useEffect } from "react"
+import { useRef, KeyboardEvent, useEffect, InputHTMLAttributes } from "react"
 import { ChangeEvent, MouseEvent } from "react";
 import { commandStore } from "../store/commandStore";
 
-
-
-interface Props {
+interface Props extends InputHTMLAttributes<HTMLInputElement>  {
     handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void,
     setInputData: (data: string) => void,
     inputData: string,
@@ -13,11 +11,10 @@ interface Props {
         currentCommandTime?: string,
         tittle?: string,
     },
-
     focused?:boolean
 }
 
-export default function InputPrompt({ handleKeyDown, setInputData, inputData, promptInfo, focused = true }: Props) {
+export default function InputPrompt({ handleKeyDown, setInputData, inputData, promptInfo, focused = true, ...inputProps}: Props) {
     const inputRef = useRef<HTMLInputElement>(null);
     const { commandsExecutions, path} = commandStore();
     const handleCommandChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -51,8 +48,8 @@ export default function InputPrompt({ handleKeyDown, setInputData, inputData, pr
                     value={inputData}
                     autoFocus
                     className=" w-1 bg-inherit outline-none caret-transparent"
-                    type={promptInfo.tittle == "Password" ? 'password': 'text'}
                     disabled={!focused}
+                    {...inputProps}
                 />
             </pre>
             {
