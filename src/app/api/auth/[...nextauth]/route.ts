@@ -3,6 +3,7 @@ import NextAuth from "next-auth/next";
 import db from "@/app/libs/db";
 import { JWT } from "next-auth/jwt";
 import { Session } from "next-auth";
+import argon2 from 'argon2'
 
 export const authOptions = {
     providers: [
@@ -14,18 +15,20 @@ export const authOptions = {
     },
     
     async authorize(credentials, req) {
-       const user = await db.user.findFirst({where:{
-        username:credentials?.username,
-        password:credentials?.password
-       }})
-       if(user) return {
-        id:String(user.id),
-        name:user.username,
-       };
+       const user = await db.user.findFirst({
+        where: { username: credentials?.username },
+       }) 
+       if(user && credentials?.password){
+        const match = await argon2.verify(user?.password, credentials?.password);
+        console.log(match)
+        if(match) return {
+          id:String(user.id),
+          name:user.username,
+        };  
+       }
 
       // Return null if the credentials are invalid
       return null;
-      
     }
   })
 ],

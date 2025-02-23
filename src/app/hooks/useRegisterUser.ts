@@ -22,7 +22,7 @@ export default function useRegisterUser(){
                 const error = await res.json();
                 throw new Error(error.message);
             }
-            await signIn('credentials', { user: user.username, password: user.password, redirect: false })
+            await signIn('credentials', { username: user.username, password: user.password, redirect: false })
         }catch(err){
             const error = err as Error;
             setErrorMessage(error?.message || "Ocurrio un error en el servidor");

@@ -1,5 +1,6 @@
 import { ApiError } from "../utils/ApiError"
 import db from "@/app/libs/db"
+import argon2 from 'argon2';
 
 interface User {
     name: string,
@@ -13,8 +14,10 @@ export async function register(user: User){
     if( userExist ){
       throw new ApiError(409, "El nombre de usuario ya existe");
     }
+    const hash = await argon2.hash(user.password);
+    console.log(hash);
     const { userDoc } = await db.$transaction(async (db) => {
-        const userDoc = await db.user.create({ data: user});
+        const userDoc = await db.user.create({ data: {...user, password: hash}});
         await db.directory.create({
           data: {
            name:'/',
