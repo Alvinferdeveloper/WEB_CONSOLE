@@ -1,4 +1,4 @@
-import { CommandPromptOutput } from "../types/command";
+import { BasicOutPut, CommandPromptOutput } from "../types/command";
 import BasicOutput from "../components/outputs/BasicOutput";
 import { commandDefinitions, remoteCommandsAvailable } from "../data/commandDefinitions";
 
@@ -6,10 +6,10 @@ export  const  executeActionCommand = async ({ commandName, commandFlags, comman
     const commandAction = commandDefinitions.find(command => command.commandName === commandName);
     if(commandAction?.accionNeeded) {
          const output = await commandAction.accionNeeded({ commandName, commandFlags, commandParams},currentPath);
-         if( !output ) return undefined;
+         if( !output?.list) return undefined;
          return {
             input: commandName,
-            output,
+            output: output.list as BasicOutPut,
             userName,
             absolutePath:currentPath.absolutePath,
             time,

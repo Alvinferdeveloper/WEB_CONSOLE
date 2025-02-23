@@ -19,7 +19,7 @@ export async function cd({ commandName, commandFlags, commandParams }: { command
 
     const setPath = commandStore.getState().setPath;
     setPath({id:json.id, absolutePath:json.newPath})
-    return undefined;
+    return { list:[]};
 
 }
 
