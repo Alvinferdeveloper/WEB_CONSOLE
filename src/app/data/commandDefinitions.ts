@@ -75,8 +75,8 @@ export const  localCommandsAvailable:Record<string, commandDefinition> =  {
         availableFlags:[],
         accionNeeded: clear,
     },
-    LOGOUT: {
-        commandName:"logout",
+    EXIT: {
+        commandName:"exit",
         miniumExpectedParams:0,
         availableFlags:[],
         accionNeeded:logOutAction
