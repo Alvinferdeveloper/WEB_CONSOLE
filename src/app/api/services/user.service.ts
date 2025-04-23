@@ -15,7 +15,7 @@ export async function register(user: User){
       throw new ApiError(409, "El nombre de usuario ya existe");
     }
     const hash = await argon2.hash(user.password);
-    console.log(hash);
+
     const { userDoc } = await db.$transaction(async (db) => {
         const userDoc = await db.user.create({ data: {...user, password: hash}});
         await db.directory.create({
