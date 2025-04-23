@@ -37,7 +37,7 @@ export default function Cli() {
     }
 
     return (
-        <div className={`w-6/12 m-auto h-full pb-20 overflow-hidden bg-red-600  pt-8 text-2xl ${inconsolata.className}`} ref={cliRef}>
+        <div className={`w-6/12 m-auto h-full pb-20 overflow-hidden bg-red-600  pt-8 text-2xl`} ref={cliRef}>
             <pre className=" text-center text_shadow ">{banner}</pre>
             <Commands commands={commandsExecutions}></Commands>
             {
