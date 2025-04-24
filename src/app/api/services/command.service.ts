@@ -18,7 +18,7 @@ export async function Mkdir({ userId, commandElements, currentPath }: commandExe
         }
         const isCurrentPathRoot = pathFound.absolutePath == '/';
         const directoryAbsolutePath = pathFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${resourceName}`);
-        const newDirectoryExists = await db.directory.findFirst({ where: { name: resourceName, parentId: pathFound.id } });
+        const newDirectoryExists = await db.directory.findFirst({ where: { name: resourceName, parentId: pathFound.id, userId } });
         if (newDirectoryExists) return { list: [`Error: El  directorio ${commandName}  ya existe`] }
         await db.directory.create({ data: { name: resourceName, parentId: pathFound.id, userId, absolutePath: directoryAbsolutePath } })
     }
@@ -69,7 +69,7 @@ export async function Touch({ userId, commandElements, currentPath }: commandExe
     }
     const isCurrentPathRoot = pathFound.absolutePath == '/';
     const fileAbsolutePath = pathFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${resourceName}`);
-    const newFileExist = await db.file.findFirst({ where: { name: resourceName, directoryId: pathFound.id } });
+    const newFileExist = await db.file.findFirst({ where: { name: resourceName, directoryId: pathFound.id, userId } });
     if (newFileExist) return { list: ['Error: Este archivo ya existe'] }
     await db.file.create({ data: { name: resourceName, directoryId: pathFound.id, userId, absolutePath: fileAbsolutePath } })
 
