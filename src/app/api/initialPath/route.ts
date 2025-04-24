@@ -1,8 +1,13 @@
 import globalExceptionHandler from "../middlewares/globalExceptionHandler";
 import db from "@/app/libs/db";
+import { getServerSession} from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]/route";
+import { ApiError } from "../utils/ApiError";
 
 async function getInitialPath (){
-    const path = await db.directory.findFirst({where:{userId:parseInt("7"), absolutePath:'/'}});
+    const session = await getServerSession(authOptions);
+    if(!session) throw new ApiError(404,"unauthorized access");
+    const path = await db.directory.findFirst({where:{userId:parseInt(session.user.id), absolutePath:'/'}});
     return path;
 }
 
