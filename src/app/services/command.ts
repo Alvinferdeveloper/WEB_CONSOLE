@@ -9,7 +9,7 @@ export  const  executeActionCommand = async ({ commandName, commandFlags, comman
          if( !output?.list) return undefined;
          return {
             input: commandName,
-            output: output.list as BasicOutPut,
+            output: output as BasicOutPut,
             userName,
             absolutePath:currentPath.absolutePath,
             time,
