@@ -1,6 +1,6 @@
 import { useState, KeyboardEvent } from "react";
-import InputPrompt from "./InputPrompt";
-import useRegisterUser from "../hooks/useRegisterUser";
+import InputPrompt from "../terminal/InputPrompt";
+import useRegisterUser from "../../hooks/useRegisterUser";
 
 const steps = [
   { key: "username", title: "Ingrese un nombre de usuario" },

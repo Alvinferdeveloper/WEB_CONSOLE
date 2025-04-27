@@ -1,15 +1,15 @@
 "use client"
 import { useEffect, useRef, KeyboardEvent } from "react";
-import { commandStore } from "../store/commandStore";
+import { commandStore } from "../../store/commandStore";
 import Commands from "./Commands";
 import Prompt from "./Prompt";
 import { useSession } from "next-auth/react";
-import { inconsolata } from "../fonts/nextfonts";
-import useFiglet from "../hooks/useFiglet";
+import { inconsolata } from "../../fonts/nextfonts";
+import useFiglet from "../../hooks/useFiglet";
 import { useState } from "react";
-import SignInPrompts from "./SignInPrompt";
+import SignInPrompts from "../auth/SignInPrompt";
 import InputPrompt from "./InputPrompt";
-import RegisterPrompt from "./RegisterPrompt";
+import RegisterPrompt from "../auth/RegisterPrompt";
 
 export default function Cli() {
     const { commandsExecutions } = commandStore();

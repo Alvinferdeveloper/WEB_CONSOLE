@@ -1,5 +1,5 @@
 import { useState, KeyboardEvent } from "react";
-import InputPrompt from "./InputPrompt";
+import InputPrompt from "../terminal/InputPrompt";
 import { signIn } from "next-auth/react";
 
 export default function SignInPrompts(){

@@ -6,8 +6,8 @@ import {
 } from "react";
 import { useSession } from "next-auth/react";
 import InputPrompt from "./InputPrompt";
-import useCommandActions from "../hooks/useCommandActions";
-import useGetinitalPath from "../hooks/useGetInitialPath";
+import useCommandActions from "../../hooks/useCommandActions";
+import useGetinitalPath from "../../hooks/useGetInitialPath";
 
 export default function Prompt() {
   const [currentCommandTime, setCurrentCommandTime] = useState<string>("");

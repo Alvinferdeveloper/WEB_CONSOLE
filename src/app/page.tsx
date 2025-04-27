@@ -1,5 +1,5 @@
 "use client"
-import Cli from "./components/Cli"
+import Cli from "./components/terminal/Cli"
 import { SessionProvider } from "next-auth/react"
 
 export default function App() {

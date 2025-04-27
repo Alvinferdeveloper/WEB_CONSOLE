@@ -1,6 +1,6 @@
 import { useRef, KeyboardEvent, useEffect, InputHTMLAttributes } from "react"
 import { ChangeEvent, MouseEvent } from "react";
-import { commandStore } from "../store/commandStore";
+import { commandStore } from "../../store/commandStore";
 
 interface Props extends InputHTMLAttributes<HTMLInputElement>  {
     handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void,
