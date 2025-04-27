@@ -14,7 +14,7 @@ export default function Prompt() {
   const [command, setCommand] = useState<string>("");
   const { commandsExecutions, executeCommand } = useCommandActions();
   const { data: session } = useSession();
-  const [currentHistoryIndex, setCurrentHistoryIndex] = useState(0);
+  const [_, setCurrentHistoryIndex] = useState(0);
   useGetinitalPath();
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -25,6 +25,7 @@ export default function Prompt() {
   };
 
   useEffect(() => {
+    setCurrentHistoryIndex(commandsExecutions.length);
     setCurrentCommandTime(new Date().toLocaleTimeString());
   }, [commandsExecutions]);
 
