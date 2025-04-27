@@ -2,7 +2,7 @@ import { useRef, KeyboardEvent, useEffect, InputHTMLAttributes } from "react"
 import { ChangeEvent, MouseEvent } from "react";
 import { commandStore } from "../../store/commandStore";
 
-interface Props extends InputHTMLAttributes<HTMLInputElement>  {
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
     handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void,
     setInputData: (data: string) => void,
     inputData: string,
@@ -11,12 +11,12 @@ interface Props extends InputHTMLAttributes<HTMLInputElement>  {
         currentCommandTime?: string,
         tittle?: string,
     },
-    focused?:boolean
+    focused?: boolean
 }
 
-export default function InputPrompt({ handleKeyDown, setInputData, inputData, promptInfo, focused = true, ...inputProps}: Props) {
+export default function InputPrompt({ handleKeyDown, setInputData, inputData, promptInfo, focused = true, ...inputProps }: Props) {
     const inputRef = useRef<HTMLInputElement>(null);
-    const { commandsExecutions, path} = commandStore();
+    const { commandsExecutions, path } = commandStore();
     const handleCommandChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (inputRef.current) {
             inputRef.current.style.width = inputRef.current.value.length + "ch";
@@ -30,12 +30,11 @@ export default function InputPrompt({ handleKeyDown, setInputData, inputData, pr
 
     useEffect(() => {
         if (inputRef.current && focused)
-            inputRef.current.style.width = 1 + "ch";
-        if(focused)
+            inputRef.current.style.width = inputData.length + "ch";
+        if (focused)
             inputRef.current?.focus();
-    }, [commandsExecutions, focused]);
+    }, [focused, inputData]);
 
-  
 
     return (
         <div>
@@ -54,11 +53,11 @@ export default function InputPrompt({ handleKeyDown, setInputData, inputData, pr
             </pre>
             {
                 focused && <span
-                className={` inline-block h-6 w-3 bg-blue-500 text-blue-500 cursor`}
-                onClick={handleCaretClick}
-            >
-                |
-            </span>
+                    className={` inline-block h-6 w-3 bg-blue-500 text-blue-500 cursor`}
+                    onClick={handleCaretClick}
+                >
+                    |
+                </span>
             }
         </div>
 
