@@ -29,7 +29,7 @@ export default function SignInPrompts(){
     return (
       <>
       {
-        logInerror && (<p>Username or password incorrect</p>)
+        logInerror && (<p className="text-sm text-red-600">Usuario o contraseña incorrecto, vuelve a intentarlo</p>)
       }
       <InputPrompt handleKeyDown={handleUsernameInputKeyDown} setInputData={setUsername} inputData={username} promptInfo={{tittle:"Usuario"}} focused ={!showPassword} />
       {

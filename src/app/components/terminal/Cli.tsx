@@ -41,7 +41,7 @@ export default function Cli() {
             <pre className=" text-center text_shadow ">{banner}</pre>
             <Commands commands={commandsExecutions}></Commands>
             {
-                status == 'loading' && <p>Loading...</p>
+                status == 'loading' && <p className="text-sm">Loading...</p>
             }
             {
                 status == 'authenticated' && <Prompt/>

@@ -39,7 +39,7 @@ export default function InputPrompt({ handleKeyDown, setInputData, inputData, pr
 
     return (
         <div>
-            <pre className="inline-block">
+            <pre className="inline-block text-xl">
                 {promptInfo.username && promptInfo.currentCommandTime ? `${promptInfo.username}@${promptInfo?.currentCommandTime}:${path?.absolutePath}$ ` : promptInfo.tittle + ": "}
                 <input
                     ref={inputRef}

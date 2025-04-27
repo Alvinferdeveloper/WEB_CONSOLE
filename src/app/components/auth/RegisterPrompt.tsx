@@ -36,9 +36,9 @@ export default function RegisterPrompt() {
   return (
     <>
       {errorMessage.split(/\n/).map((err, index) => (
-        <p key={index}>{err}</p>
+        <p key={index} className="text-sm text-red-600">{err}</p>
       ))}
-      <br />
+      
       {steps.map((step, index) => (
         stepCount > index && (
           <InputPrompt
