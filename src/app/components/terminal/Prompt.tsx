@@ -1,6 +1,5 @@
 "use client";
 import {
-  KeyboardEvent,
   useEffect,
   useState,
 } from "react";
@@ -8,15 +7,17 @@ import { useSession } from "next-auth/react";
 import InputPrompt from "./InputPrompt";
 import useCommandActions from "../../hooks/useCommandActions";
 import useGetinitalPath from "../../hooks/useGetInitialPath";
+import { commandStore } from "@/app/store/commandStore";
 
 export default function Prompt() {
   const [currentCommandTime, setCurrentCommandTime] = useState<string>("");
   const [command, setCommand] = useState<string>("");
-  const { commandsExecutions, executeCommand} = useCommandActions();
+  const { commandsExecutions, executeCommand } = useCommandActions();
   const { data: session } = useSession();
+  const [currentHistoryIndex, setCurrentHistoryIndex] = useState(0);
   useGetinitalPath();
 
-  const handleKeyDown = (e: KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key == "Enter" && session?.user) {
       executeCommand(command, currentCommandTime, session.user);
       setCommand("");
@@ -26,6 +27,30 @@ export default function Prompt() {
   useEffect(() => {
     setCurrentCommandTime(new Date().toLocaleTimeString());
   }, [commandsExecutions]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const history = commandStore.getState().history;
+      if (e.key == 'ArrowUp') {
+        setCurrentHistoryIndex(prev => {
+          const next = Math.max(0, prev - 1);
+          setCommand(history[next]);
+          return next;
+        });
+      }
+      else if (e.key == 'ArrowDown') {
+        setCurrentHistoryIndex(prev => {
+          const before = Math.min(history.length - 1, prev + 1)
+          setCommand(history[before]);
+          return before;
+        });
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [])
 
 
   return (

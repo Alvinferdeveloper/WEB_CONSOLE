@@ -6,7 +6,8 @@ type States = {
     path: {
         id:number,
         absolutePath:string
-    }
+    },
+    history: string[]
 }
 
 type Actions = {
@@ -14,11 +15,13 @@ type Actions = {
    clear:()=>void;
    setPath:({id, absolutePath}:{id:number, absolutePath:string}) => void;
    reset: ()=>void;
+   addHistory: (command: string) => void;
 }
 
 export const commandStore = create<States & Actions>((set,get)=>(
     {
         commandsExecutions:[],
+        history:[],
         clear:()=>set({commandsExecutions:[]}),
         addNewCommandExecution: (commandExecution: CommandPromptOutput) => set((state)=>({commandsExecutions:[...state.commandsExecutions,commandExecution]})),
         path:{id:0, absolutePath:'/'},//this is temporary
@@ -26,7 +29,8 @@ export const commandStore = create<States & Actions>((set,get)=>(
             id,
             absolutePath
         } }),
-        reset:()=> set({ commandsExecutions:[], path:{id:0, absolutePath:'/'} })
+        reset:()=> set({ commandsExecutions:[], path:{id:0, absolutePath:'/'} }),
+        addHistory: (command: string) => set((state) => {console.log(command);return { history: [...state.history, command] }}),
         
     }
 ))

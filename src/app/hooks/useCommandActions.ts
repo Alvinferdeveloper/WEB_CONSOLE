@@ -12,24 +12,24 @@ import BasicOutput from "../components/outputs/BasicOutput";
 import { CommandPromptOutput } from "../types/command";
 
 export default function useCommandActions() {
-    const { commandsExecutions, addNewCommandExecution, path } = commandStore();
+    const { commandsExecutions, addNewCommandExecution, path, addHistory } = commandStore();
     const executeCommand = async (command: string, time: string, user: User) => {
         const { commandName, commandFlags, commandParams } = parseCommand(command);
         let commandPromptOutput: CommandPromptOutput | void = undefined;
         if (isCommandValid(commandName, commandParams, commandFlags)) {
-            if(isCommandWithActionNeeded(commandName)){// commands that need to execute actions on the local state
-                commandPromptOutput = await executeActionCommand({ commandName, commandFlags, commandParams}, time, user.name, path);
+            if (isCommandWithActionNeeded(commandName)) {// commands that need to execute actions on the local state
+                commandPromptOutput = await executeActionCommand({ commandName, commandFlags, commandParams }, time, user.name, path);
             }
             else if (isCommandLocal(commandName)) {
                 commandPromptOutput = executeLocalCommand(
-                    { commandName, commandFlags, commandParams},
+                    { commandName, commandFlags, commandParams },
                     time,
                     user.name,
                     path,
                 );
             } else if (isCommandRemote(commandName)) {
                 commandPromptOutput = await executeRemoteCommand(
-                    {commandName, commandFlags, commandParams},
+                    { commandName, commandFlags, commandParams },
                     time,
                     user.name,
                     path
@@ -42,13 +42,14 @@ export default function useCommandActions() {
                 input: commandName,
                 absolutePath: path.absolutePath,
                 output: {
-                    list:['Command not valid']
+                    list: ['Command not valid']
                 },
                 component: BasicOutput
             };
         }
 
-        commandPromptOutput && addNewCommandExecution({...commandPromptOutput, input: command});
+        commandPromptOutput && addNewCommandExecution({ ...commandPromptOutput, input: command });
+        addHistory(command);
     };
 
     return { commandsExecutions, executeCommand };
