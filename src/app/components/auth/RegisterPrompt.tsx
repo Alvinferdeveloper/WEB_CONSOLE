@@ -35,10 +35,11 @@ export default function RegisterPrompt() {
 
   return (
     <>
+      <p className="text-xl text-center">Proceso de registro</p>
       {errorMessage.split(/\n/).map((err, index) => (
         <p key={index} className="text-sm text-red-600">{err}</p>
       ))}
-      
+
       {steps.map((step, index) => (
         stepCount > index && (
           <InputPrompt
