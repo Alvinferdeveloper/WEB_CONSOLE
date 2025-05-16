@@ -37,7 +37,7 @@ export default function InputPrompt({ handleKeyDown, setInputData, inputData, pr
 
 
     return (
-        <div>
+        <div className="relative">
             <pre className="inline-block text-xl">
                 {promptInfo.username && promptInfo.currentCommandTime ? `${promptInfo.username}@${promptInfo?.currentCommandTime}:${path?.absolutePath}$ ` : promptInfo.tittle + ": "}
                 <input
@@ -53,10 +53,10 @@ export default function InputPrompt({ handleKeyDown, setInputData, inputData, pr
             </pre>
             {
                 focused && <span
-                    className={` inline-block h-6 w-3 bg-blue-500 text-blue-500 cursor`}
+                    className={` inline-block h-7 w-3 bg-blue-500 text-blue-500 cursor absolute bottom-0 cursor-text`}
                     onClick={handleCaretClick}
                 >
-                    |
+
                 </span>
             }
         </div>
