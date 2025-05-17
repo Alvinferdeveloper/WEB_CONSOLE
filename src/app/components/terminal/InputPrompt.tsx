@@ -18,10 +18,7 @@ export default function InputPrompt({ handleKeyDown, setInputData, inputData, pr
     const inputRef = useRef<HTMLInputElement>(null);
     const { commandsExecutions, path } = commandStore();
     const handleCommandChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (inputRef.current) {
-            inputRef.current.style.width = inputRef.current.value.length + "ch";
-            setInputData(e.target?.value);
-        }
+        setInputData(e.target?.value);
     };
 
     const handleCaretClick = (e: MouseEvent<HTMLSpanElement>) => {
@@ -29,8 +26,9 @@ export default function InputPrompt({ handleKeyDown, setInputData, inputData, pr
     };
 
     useEffect(() => {
-        if (inputRef.current && focused)
+        if (inputRef.current && focused) {
             inputRef.current.style.width = inputData.length + "ch";
+        }
         if (focused)
             inputRef.current?.focus();
     }, [focused, inputData]);

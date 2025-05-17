@@ -32,18 +32,19 @@ export default function Prompt() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const history = commandStore.getState().history;
+      if (history.length == 0) return;
       if (e.key == 'ArrowUp') {
         setCurrentHistoryIndex(prev => {
-          const next = Math.max(0, prev - 1);
-          setCommand(history[next]);
-          return next;
+          const before = Math.max(0, prev - 1)
+          setCommand(history[before]);
+          return before;
         });
       }
       else if (e.key == 'ArrowDown') {
         setCurrentHistoryIndex(prev => {
-          const before = Math.min(history.length - 1, prev + 1)
-          setCommand(history[before]);
-          return before;
+          const next = Math.min(history.length - 1, prev + 1);
+          setCommand(history[next]);
+          return next;
         });
       }
     }
