@@ -2,7 +2,8 @@ import BasicOutput from "../components/outputs/BasicOutput";
 import { Ls } from "../components/outputs/Ls"
 import { clear, cd, logOutAction } from "../services/commandActions";
 import { help } from "../services/localCommands";
-import { BasicOutPut } from "../types/command"
+import { BasicOutPut } from "../types/command";
+import { history } from "../services/localCommands";
 
 type commandDefinition = {
     commandName: string,
@@ -80,6 +81,12 @@ export const  localCommandsAvailable:Record<string, commandDefinition> =  {
         miniumExpectedParams:0,
         availableFlags:[],
         accionNeeded:logOutAction
+    },
+    HISTORY: {
+        commandName:"history",
+        miniumExpectedParams:0,
+        availableFlags:[],
+        execute:history
     }
 }
 
