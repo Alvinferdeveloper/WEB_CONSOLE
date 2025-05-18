@@ -8,11 +8,13 @@ import InputPrompt from "./InputPrompt";
 import useCommandActions from "../../hooks/useCommandActions";
 import useGetinitalPath from "../../hooks/useGetInitialPath";
 import { commandStore } from "@/app/store/commandStore";
+import NanoEditor from "../tools/nano-editor";
 
 export default function Prompt() {
   const [currentCommandTime, setCurrentCommandTime] = useState<string>("");
   const [command, setCommand] = useState<string>("");
   const { commandsExecutions, executeCommand } = useCommandActions();
+  const { isNanoOpen } = commandStore();
   const { data: session } = useSession();
   const [_, setCurrentHistoryIndex] = useState(0);
   useGetinitalPath();
@@ -21,8 +23,8 @@ export default function Prompt() {
     if (e.key == "Enter" && session?.user) {
       executeCommand(command, currentCommandTime, session.user);
       setCommand("");
-    }
-  };
+    };
+  }
 
   useEffect(() => {
     setCurrentHistoryIndex(commandsExecutions.length);
@@ -56,6 +58,7 @@ export default function Prompt() {
 
 
   return (
-    <InputPrompt handleKeyDown={handleKeyDown} setInputData={setCommand} inputData={command} promptInfo={{ username: session?.user?.name, currentCommandTime }} />
+    isNanoOpen ? <NanoEditor /> :
+      <InputPrompt handleKeyDown={handleKeyDown} setInputData={setCommand} inputData={command} promptInfo={{ username: session?.user?.name, currentCommandTime }} />
   );
 }

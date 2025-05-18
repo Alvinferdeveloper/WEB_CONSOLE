@@ -1,92 +1,98 @@
 import BasicOutput from "../components/outputs/BasicOutput";
 import { Ls } from "../components/outputs/Ls"
-import { clear, cd, logOutAction } from "../services/commandActions";
+import { clear, cd, logOutAction, nano } from "../services/commandActions";
 import { help } from "../services/localCommands";
 import { BasicOutPut } from "../types/command";
 import { history } from "../services/localCommands";
 
 type commandDefinition = {
     commandName: string,
-    miniumExpectedParams:number,
-    availableFlags:string[],
-    component?: (output:any) => JSX.Element,
-    accionNeeded?: ({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }, currentPath:{id:number, absolutePath:string})=>Promise<BasicOutPut | void>;
-    execute?: ({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }, currentPath:{id:number, absolutePath:string})=>BasicOutPut | void,
+    miniumExpectedParams: number,
+    availableFlags: string[],
+    component?: (output: any) => JSX.Element,
+    accionNeeded?: ({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }, currentPath: { id: number, absolutePath: string }) => Promise<BasicOutPut | void>;
+    execute?: ({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }, currentPath: { id: number, absolutePath: string }) => BasicOutPut | void,
 }
 
-export const remoteCommandsAvailable : Record<string, commandDefinition> = {
-    LS : {
+export const remoteCommandsAvailable: Record<string, commandDefinition> = {
+    LS: {
         commandName: "ls",
         miniumExpectedParams: 0,
-        availableFlags:['a','b'],
-        component:Ls,
+        availableFlags: ['a', 'b'],
+        component: Ls,
     },
 
-    MKDIR:{
+    MKDIR: {
         commandName: "mkdir",
         miniumExpectedParams: 1,
-        availableFlags:[],
+        availableFlags: [],
     },
 
-    CD:{
-        commandName:'cd',
-        miniumExpectedParams:1,
-        availableFlags:[],
-        accionNeeded:cd
+    CD: {
+        commandName: 'cd',
+        miniumExpectedParams: 1,
+        availableFlags: [],
+        accionNeeded: cd
     },
 
-    TOUCH:{
-        commandName:'touch',
-        miniumExpectedParams:1,
-        availableFlags:[],
+    TOUCH: {
+        commandName: 'touch',
+        miniumExpectedParams: 1,
+        availableFlags: [],
     },
     RM: {
-        commandName:'rm',
-        miniumExpectedParams:1,
-        availableFlags:[]
+        commandName: 'rm',
+        miniumExpectedParams: 1,
+        availableFlags: []
     },
     RMDIR: {
-        commandName:'rmdir',
-        miniumExpectedParams:1,
-        availableFlags:[]
+        commandName: 'rmdir',
+        miniumExpectedParams: 1,
+        availableFlags: []
     },
     MV: {
-        commandName:'mv',
-        miniumExpectedParams:2,
-        availableFlags:[]
+        commandName: 'mv',
+        miniumExpectedParams: 2,
+        availableFlags: []
     },
     CP: {
         commandName: 'cp',
-        miniumExpectedParams:2,
-        availableFlags:[]
+        miniumExpectedParams: 2,
+        availableFlags: []
+    },
+    NANO: {
+        commandName: 'nano',
+        miniumExpectedParams: 1,
+        availableFlags: [],
+        accionNeeded: nano
     }
 }
 
-export const  localCommandsAvailable:Record<string, commandDefinition> =  {
-    HELP : {
-            commandName: "help",
-            miniumExpectedParams: 1,
-            availableFlags:['a','b'],
-            component: BasicOutput,
-            execute : help
+export const localCommandsAvailable: Record<string, commandDefinition> = {
+    HELP: {
+        commandName: "help",
+        miniumExpectedParams: 1,
+        availableFlags: ['a', 'b'],
+        component: BasicOutput,
+        execute: help
     },
     CLEAR: {
-        commandName:"clear",
-        miniumExpectedParams:0,
-        availableFlags:[],
+        commandName: "clear",
+        miniumExpectedParams: 0,
+        availableFlags: [],
         accionNeeded: clear,
     },
     EXIT: {
-        commandName:"exit",
-        miniumExpectedParams:0,
-        availableFlags:[],
-        accionNeeded:logOutAction
+        commandName: "exit",
+        miniumExpectedParams: 0,
+        availableFlags: [],
+        accionNeeded: logOutAction
     },
     HISTORY: {
-        commandName:"history",
-        miniumExpectedParams:0,
-        availableFlags:[],
-        execute:history
+        commandName: "history",
+        miniumExpectedParams: 0,
+        availableFlags: [],
+        execute: history
     }
 }
 
