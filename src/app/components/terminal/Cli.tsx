@@ -50,7 +50,7 @@ export default function Cli() {
     }
 
     return (
-        <div className={`w-6/12 m-auto relative h-full relative pb-20 overflow-hidden pt-8 text-2xl  bg-black text-terminal-green border border-terminal-glow shadow-terminal`} ref={cliRef}>
+        <div className={`w-6/12 m-auto relative h-full pb-20 overflow-hidden pt-8 text-2xl  bg-black text-terminal-green border border-terminal-glow shadow-terminal`} ref={cliRef}>
             <pre className=" text-center text_shadow ">{banner}</pre>
             <Commands commands={commandsExecutions}></Commands>
             {
