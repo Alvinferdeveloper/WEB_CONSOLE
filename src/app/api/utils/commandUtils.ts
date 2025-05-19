@@ -29,6 +29,9 @@ export async function findPath(currentDirectoryId: number, pathToGo: string, use
                 routeFoundId = nextPath?.id
                 currentDirectoryId = nextPath?.id;
             }
+            else {
+                return null;
+            }
 
         }
     }
