@@ -8,7 +8,11 @@ type States = {
         absolutePath: string
     },
     history: string[],
-    isNanoOpen: boolean
+    nanoInfo: {
+        isOpen: boolean,
+        filePath?: string,
+        id?: number
+    }
 }
 
 type Actions = {
@@ -17,14 +21,14 @@ type Actions = {
     setPath: ({ id, absolutePath }: { id: number, absolutePath: string }) => void;
     reset: () => void;
     addHistory: (command: string) => void;
-    setIsNanoOpen: (isNanoOpen: boolean) => void;
+    setNanoInfo: ({ isOpen, filePath, id }: { isOpen: boolean, filePath?: string, id?: number }) => void;
 }
 
 export const commandStore = create<States & Actions>((set, get) => (
     {
         commandsExecutions: [],
         history: [],
-        isNanoOpen: false,
+        nanoInfo: { isOpen: false, filePath: undefined },
         clear: () => set({ commandsExecutions: [] }),
         addNewCommandExecution: (commandExecution: CommandPromptOutput) => set((state) => ({ commandsExecutions: [...state.commandsExecutions, commandExecution] })),
         path: { id: 0, absolutePath: '/' },//this is temporary
@@ -36,7 +40,7 @@ export const commandStore = create<States & Actions>((set, get) => (
         }),
         reset: () => set({ commandsExecutions: [], path: { id: 0, absolutePath: '/' } }),
         addHistory: (command: string) => set((state) => ({ history: [...state.history, command] })),
-        setIsNanoOpen: (isNanoOpen: boolean) => set({ isNanoOpen }),
+        setNanoInfo: ({ isOpen, filePath, id }) => set({ nanoInfo: { isOpen, filePath, id } }),
 
     }
 ))

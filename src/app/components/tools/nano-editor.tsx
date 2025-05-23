@@ -1,96 +1,78 @@
 "use client"
 
-import type React from "react"
+import { commandStore } from "@/app/store/commandStore"
+import React from "react"
 
-import { useEffect, useState, useRef } from "react"
+import { useRef } from "react"
+import { useNanoContent } from "../../hooks/nano/useNanoContent"
+import { useNanoFileInfo } from "../../hooks/nano/useNanoFileInfo"
+import { useNanoDialog } from "../../hooks/nano/useNanoDialog"
+import { useNanoShortcuts } from "../../hooks/nano/useNanoShortcuts"
+import { saveFileContent } from "../../services/files"
 
 export default function NanoEditor() {
-    const [content, setContent] = useState(
-        "Bienvenido a nano. Escribe algo aquí...\n\nEste es un simulador de nano en una terminal retro.\nPuedes editar este texto y guardar con Ctrl+O (simular).\n",
-    )
-    const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 })
-    const [modified, setModified] = useState(false)
-    const [filename, setFilename] = useState("nuevo-archivo.txt")
-    const [showSaveDialog, setShowSaveDialog] = useState(false)
-    const [saveFilename, setSaveFilename] = useState("nuevo-archivo.txt")
-    const [showMessage, setShowMessage] = useState(false)
-    const [message, setMessage] = useState("")
-    const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const { path, nanoInfo } = commandStore();
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    // Update cursor position when content changes
-    const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const newContent = e.target.value
-        setContent(newContent)
-        setModified(true)
+    // Content and cursor
+    const {
+        content,
+        cursorPosition,
+        modified,
+        setModified,
+        handleContentChange,
+    } = useNanoContent(
+        "Bienvenido a nano. Escribe algo aquí..."
+    );
 
-        // Calculate cursor position
-        const textBeforeCursor = newContent.substring(0, e.target.selectionStart)
-        const lines = textBeforeCursor.split("\n")
-        const currentLine = lines.length
-        const currentColumn = lines[lines.length - 1].length + 1
+    // File info
+    const {
+        filename,
+        setFilename,
+        saveFilename,
+        setSaveFilename,
+    } = useNanoFileInfo({ filePath: nanoInfo.filePath || "" });
 
-        setCursorPosition({ line: currentLine, column: currentColumn })
-    }
+    // Dialog and messages
+    const {
+        showSaveDialog,
+        setShowSaveDialog,
+        showMessage,
+        message,
+        showSavePrompt,
+    } = useNanoDialog();
 
-    // Handle keyboard shortcuts
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        // Ctrl+O (Save)
-        if (e.ctrlKey && e.key === "o") {
-            e.preventDefault()
-            setShowSaveDialog(true)
-        }
-
-        // Ctrl+X (Exit)
-        if (e.ctrlKey && e.key === "x") {
-            e.preventDefault()
-            if (modified) {
-                showSavePrompt("¿Guardar antes de salir?")
-            } else {
-                showSavePrompt("Archivo cerrado")
-            }
-        }
-
-        // Ctrl+G (Help)
-        if (e.ctrlKey && e.key === "g") {
-            e.preventDefault()
-            showSavePrompt("Ayuda: Ctrl+O para guardar, Ctrl+X para salir")
-        }
-    }
+    // Shortcuts
+    const { handleKeyDown } = useNanoShortcuts({ setShowSaveDialog, modified, showSavePrompt, setModified });
 
     // Handle save dialog
-    const handleSaveDialogKeyDown = (e: React.KeyboardEvent) => {
+    const handleSaveDialogKeyDown = async (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
-            e.preventDefault()
-            setFilename(saveFilename)
-            setShowSaveDialog(false)
-            setModified(false)
-            showSavePrompt(`Guardado como: ${saveFilename}`)
+            e.preventDefault();
+            setFilename(saveFilename);
+            setShowSaveDialog(false);
+            setModified(false);
+            saveFileContent(saveFilename, path, content).then(res => {
+                showSavePrompt(`Guardado como: ${saveFilename}`);
+            }).catch(err => {
+                showSavePrompt(`Error al guardar: ${err}`);
+            });
         }
-
         if (e.key === "Escape") {
-            e.preventDefault()
-            setShowSaveDialog(false)
+            e.preventDefault();
+            setShowSaveDialog(false);
         }
-    }
-
-    // Show temporary message
-    const showSavePrompt = (msg: string) => {
-        setMessage(msg)
-        setShowMessage(true)
-        setTimeout(() => {
-            setShowMessage(false)
-        }, 2000)
-    }
+    };
 
     // Focus textarea on load
-    useEffect(() => {
+    React.useEffect(() => {
         if (textareaRef.current) {
-            textareaRef.current.focus()
+            textareaRef.current.focus();
         }
-    }, [])
+    }, []);
 
     return (
-        <div className="flex justify-center items-center min-h-screen absolute top-0 bg-zinc-950 p-5">
+        <div className="flex justify-center w-full items-center min-h-screen absolute top-0 bg-zinc-950 p-5">
             <div className="w-full max-w-3xl bg-black text-terminal-green border border-terminal-glow rounded-lg shadow-terminal font-mono relative overflow-hidden">
                 {/* Scanline effect */}
                 <div className="absolute top-0 left-0 w-full h-[4px] bg-terminal-green/10 animate-scanline pointer-events-none z-10"></div>
@@ -156,14 +138,9 @@ export default function NanoEditor() {
                     <div className="flex flex-wrap gap-x-4">
                         <span className="whitespace-nowrap">^G Ayuda</span>
                         <span className="whitespace-nowrap">^O Guardar</span>
-                        <span className="whitespace-nowrap">^W Buscar</span>
-                        <span className="whitespace-nowrap">^K Cortar</span>
                     </div>
                     <div className="flex flex-wrap gap-x-4">
                         <span className="whitespace-nowrap">^X Salir</span>
-                        <span className="whitespace-nowrap">^J Justificar</span>
-                        <span className="whitespace-nowrap">^R Leer Arch</span>
-                        <span className="whitespace-nowrap">^U Pegar</span>
                     </div>
                 </div>
             </div>

@@ -38,7 +38,7 @@ export async function logOutAction() {
 
 export async function nano({ commandParams }: { commandParams: string[] }, currentPath: { id: number, absolutePath: string }) {
     const file = commandParams[0];
-    const res = await fetch('/api/files/exists', {
+    const res = await fetch('/api/files/writable-path', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ filePath: file, currentPath })
@@ -49,8 +49,8 @@ export async function nano({ commandParams }: { commandParams: string[] }, curre
             list: ['no se encontro el archivo']
         }
     }
-    const setIsNanoOpen = commandStore.getState().setIsNanoOpen;
-    setIsNanoOpen(true);
+    const setNanoInfo = commandStore.getState().setNanoInfo;
+    setNanoInfo({ isOpen: true, filePath: file, id: json.id });
 }
 
 

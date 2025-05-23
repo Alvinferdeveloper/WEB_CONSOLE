@@ -1,6 +1,7 @@
 import db from "@/app/libs/db"
 import { findPathToGo, findPath, getTypeOfFile, findFile } from "../utils/commandUtils";
 import { TYPE_OF_FILES } from "../constants";
+import { createFile } from "./file.service";
 
 export interface commandExecutionParams {
     userId: number,
@@ -9,12 +10,12 @@ export interface commandExecutionParams {
 }
 
 export async function Mkdir({ userId, commandElements, currentPath }: commandExecutionParams) {
-    for(let commandName of commandElements.commandParams) {
+    for (let commandName of commandElements.commandParams) {
         const { pathToGo, resourceName } = findPathToGo(commandName)
         const pathFound = await findPath(currentPath.id, pathToGo, userId);
         if (!pathFound) return {
-        error: 'Directory not found',
-        outputList: ['Directory not found']
+            error: 'Directory not found',
+            outputList: ['Directory not found']
         }
         const isCurrentPathRoot = pathFound.absolutePath == '/';
         const directoryAbsolutePath = pathFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${resourceName}`);
@@ -40,7 +41,7 @@ export async function Ls({ userId, currentPath, commandElements }: commandExecut
 }
 
 export async function Cd({ userId, commandElements, currentPath }: commandExecutionParams) {
-    if(commandElements.commandParams.length > 1){
+    if (commandElements.commandParams.length > 1) {
         return {
             error: 'Too many params',
             outputList: ['cd: too many arguments']
@@ -61,18 +62,12 @@ export async function Cd({ userId, commandElements, currentPath }: commandExecut
 
 
 export async function Touch({ userId, commandElements, currentPath }: commandExecutionParams) {
-    const { pathToGo, resourceName } = findPathToGo(commandElements.commandParams[0]);
-    const pathFound = await findPath(currentPath.id, pathToGo, userId);
-    if (!pathFound) return {
+    const file = await createFile(userId, commandElements.commandParams[0], currentPath);
+    if (!file.fileId) return {
         error: 'Directory not found',
         outputList: ['Directory not found']
     }
-    const isCurrentPathRoot = pathFound.absolutePath == '/';
-    const fileAbsolutePath = pathFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${resourceName}`);
-    const newFileExist = await db.file.findFirst({ where: { name: resourceName, directoryId: pathFound.id, userId } });
-    if (newFileExist) return { list: ['Error: Este archivo ya existe'] }
-    await db.file.create({ data: { name: resourceName, directoryId: pathFound.id, userId, absolutePath: fileAbsolutePath } })
-
+    if (file.exists) return { list: ['Error: Este archivo ya existe'] }
 }
 
 
@@ -118,20 +113,20 @@ export async function Mv({ userId, commandElements, currentPath }: commandExecut
         const newAbsolutePath = targetDirectory.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${fileToMoveName}`);
         let resourceToMoveExist = null;
         if (typeOfFile == TYPE_OF_FILES.DIRECTORY) {
-            resourceToMoveExist= await db.directory.findFirst({ where: { name: fileToMoveName, parentId: targetDirectory.id } }); 
+            resourceToMoveExist = await db.directory.findFirst({ where: { name: fileToMoveName, parentId: targetDirectory.id } });
             !resourceToMoveExist && await db.directory.update({ where: { id: fileToMove.id }, data: { name: fileToMoveName, parentId: targetDirectory.id, absolutePath: newAbsolutePath } });
         }
         else if (typeOfFile == TYPE_OF_FILES.REGULAR_FILE) {
-            resourceToMoveExist = await db.file.findFirst({ where: { name: fileToMove.name, directoryId: targetDirectory.id }});
+            resourceToMoveExist = await db.file.findFirst({ where: { name: fileToMove.name, directoryId: targetDirectory.id } });
             !resourceToMoveExist && await db.file.update({ where: { id: fileToMove.id }, data: { name: fileToMoveName, directoryId: targetDirectory.id, absolutePath: newAbsolutePath } });
         }
-        if( resourceToMoveExist){
+        if (resourceToMoveExist) {
             return {
                 error: 'repeated file',
                 outputList: ['This file already exists in the current directory']
             }
         }
-    }else {
+    } else {
         return {
             error: 'some path does not exist',
             outputList: ['Some of the path specified is invalid']
@@ -140,32 +135,32 @@ export async function Mv({ userId, commandElements, currentPath }: commandExecut
 
 }
 
-export async function Cp({ userId, commandElements, currentPath }: commandExecutionParams){
-    const resources= commandElements.commandParams;
+export async function Cp({ userId, commandElements, currentPath }: commandExecutionParams) {
+    const resources = commandElements.commandParams;
     const copyFrom = resources[0];
     let copyTo = resources[1];
     let { pathToGo: pathToCopy, resourceName: fileToCopyName } = findPathToGo(copyFrom);
     const pathToCopyFromFound = await findPath(currentPath.id, pathToCopy, userId);
     const pathCopyToFound = await findPath(currentPath.id, copyTo, userId);
     const fileToCopy = await findFile(pathToCopyFromFound?.id || 0, fileToCopyName)
-    if(pathToCopyFromFound && pathCopyToFound && fileToCopy){
+    if (pathToCopyFromFound && pathCopyToFound && fileToCopy) {
         const typeOfFile = await getTypeOfFile(pathToCopyFromFound.id, fileToCopyName);
         const isCurrentPathRoot = pathCopyToFound.absolutePath == '/';
         const newAbsolutePath = pathCopyToFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${fileToCopyName}`);
-        const resourceToMoveExists = await findFile(pathCopyToFound.id,fileToCopyName);
-        if(typeOfFile == TYPE_OF_FILES.DIRECTORY){
-            !resourceToMoveExists && await db.directory.create({ data: { ...fileToCopy, parentId:pathCopyToFound.id, absolutePath: newAbsolutePath, id: undefined}});
+        const resourceToMoveExists = await findFile(pathCopyToFound.id, fileToCopyName);
+        if (typeOfFile == TYPE_OF_FILES.DIRECTORY) {
+            !resourceToMoveExists && await db.directory.create({ data: { ...fileToCopy, parentId: pathCopyToFound.id, absolutePath: newAbsolutePath, id: undefined } });
         }
-        else if(typeOfFile == TYPE_OF_FILES.REGULAR_FILE){
-            !resourceToMoveExists && await db.file.create({ data: { ...fileToCopy, absolutePath: newAbsolutePath, directoryId: pathCopyToFound.id, id: undefined}})
+        else if (typeOfFile == TYPE_OF_FILES.REGULAR_FILE) {
+            !resourceToMoveExists && await db.file.create({ data: { ...fileToCopy, absolutePath: newAbsolutePath, directoryId: pathCopyToFound.id, id: undefined } })
         }
-        if( resourceToMoveExists){
+        if (resourceToMoveExists) {
             return {
                 error: 'duplicate file',
                 outputList: ['This file already exists in the current directory']
             }
         }
-    }else {
+    } else {
         return {
             error: 'some path does not exist',
             outputList: ['Some of the path specified is invalid']
