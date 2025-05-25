@@ -22,10 +22,19 @@ export async function createFile(userId: number, path: string, currentPath: { id
     return { exists: false, fileId: newFile.id };
 }
 
-export async function saveFileContent(filePath: string, userId: number, currentPath: { id: number, absolutePath: string }, content: string) {
-    const file = await createFile(userId, filePath, currentPath, content);
-    if (file.exists)
-        await db.file.update({ where: { id: file.fileId }, data: { content } })
+export async function saveFileContent(filePath: string, userId: number, currentPath: { id: number, absolutePath: string }, content: string, fileId: number, fileName?: string) {
+    if (fileId) {
+        const file = await db.file.findUnique({ where: { id: fileId }, select: { absolutePath: true, name: true } });
+        let absolutePath = file?.absolutePath;
+        if (file?.name != fileName && file) {
+            const path = file.absolutePath.split('/');
+            path.pop();
+            absolutePath = '/'.concat(path.concat(`/${fileName}`).join(''));
+        }
+        await db.file.update({ where: { id: fileId }, data: { content, name: fileName, absolutePath } })
+    }
+    else
+        await createFile(userId, filePath, currentPath, content);
 }
 
 export async function getFileContent(id: number) {

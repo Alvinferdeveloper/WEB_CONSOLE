@@ -27,8 +27,8 @@ export default function NanoEditor() {
 
     // File info
     const {
-        filename,
-        setFilename,
+        filePath,
+        setFilePath,
         saveFilename,
         setSaveFilename,
     } = useNanoFileInfo({ filePath: nanoInfo.filePath || "" });
@@ -49,10 +49,10 @@ export default function NanoEditor() {
     const handleSaveDialogKeyDown = async (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
             e.preventDefault();
-            setFilename(saveFilename);
+            setFilePath(saveFilename);
             setShowSaveDialog(false);
             setModified(false);
-            saveFileContent(saveFilename, path, content).then(res => {
+            saveFileContent(filePath, path, content, nanoInfo.id, saveFilename).then(res => {
                 showSavePrompt(`Guardado como: ${saveFilename}`);
             }).catch(err => {
                 showSavePrompt(`Error al guardar: ${err}`);
@@ -83,7 +83,7 @@ export default function NanoEditor() {
                 {/* Title bar */}
                 <div className="bg-terminal-green text-black px-4 py-1 flex justify-between items-center">
                     <div>
-                        GNU nano {filename}
+                        GNU nano {saveFilename}
                         {modified ? " (modificado)" : ""}
                     </div>
                     <div>Versión 6.2</div>
