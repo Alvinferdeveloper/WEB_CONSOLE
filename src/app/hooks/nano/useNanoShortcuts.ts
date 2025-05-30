@@ -1,4 +1,5 @@
 import { KeyboardEvent } from "react";
+import { commandStore } from "../../store/commandStore";
 
 interface NanoShortcutsProps {
     setShowSaveDialog: (show: boolean) => void;
@@ -8,6 +9,7 @@ interface NanoShortcutsProps {
 }
 
 export function useNanoShortcuts({ setShowSaveDialog, modified, showSavePrompt }: NanoShortcutsProps) {
+    const { setNanoInfo } = commandStore();
     const handleKeyDown = (e: KeyboardEvent) => {
         // Ctrl+O (Save)
         if (e.ctrlKey && e.key === "o") {
@@ -22,6 +24,7 @@ export function useNanoShortcuts({ setShowSaveDialog, modified, showSavePrompt }
                 showSavePrompt("¿Guardar antes de salir?");
             } else {
                 showSavePrompt("Archivo cerrado");
+                setNanoInfo({ isOpen: false });
             }
         }
 
