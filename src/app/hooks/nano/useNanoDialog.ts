@@ -5,17 +5,27 @@ export function useNanoDialog() {
     const [showMessage, setShowMessage] = useState(false);
     const [message, setMessage] = useState("");
 
-    const showSavePrompt = (msg: string) => {
+    const showSavePrompt = (msg: string, options?: {
+        useTimeout?: boolean,
+        timeOut?: number
+    }) => {
+        const {
+            useTimeout = true,
+            timeOut = 2000
+        } = options ?? {};
+
         setMessage(msg);
         setShowMessage(true);
-        setTimeout(() => {
-            setShowMessage(false);
-        }, 2000);
+        if (useTimeout)
+            setTimeout(() => {
+                setShowMessage(false);
+            }, timeOut);
     };
 
     return {
         showSaveDialog,
         setShowSaveDialog,
+        setShowMessage,
         showMessage,
         message,
         showSavePrompt,

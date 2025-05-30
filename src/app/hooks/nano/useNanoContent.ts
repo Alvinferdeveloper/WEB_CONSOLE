@@ -5,6 +5,7 @@ export function useNanoContent(initialContent: string) {
     const [content, setContent] = useState('');
     const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 });
     const [modified, setModified] = useState(false);
+    const [unsavedModifications, setUnsavedModifications] = useState(false);
     const { nanoInfo } = commandStore();
 
     useEffect(() => {
@@ -41,5 +42,7 @@ export function useNanoContent(initialContent: string) {
         modified,
         setModified,
         handleContentChange,
+        unsavedModifications,
+        setUnsavedModifications
     };
 }

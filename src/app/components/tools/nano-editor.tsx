@@ -21,6 +21,8 @@ export default function NanoEditor() {
         modified,
         setModified,
         handleContentChange,
+        unsavedModifications,
+        setUnsavedModifications
     } = useNanoContent(
         "Bienvenido a nano. Escribe algo aquí..."
     );
@@ -38,12 +40,13 @@ export default function NanoEditor() {
         showSaveDialog,
         setShowSaveDialog,
         showMessage,
+        setShowMessage,
         message,
         showSavePrompt,
     } = useNanoDialog();
 
     // Shortcuts
-    const { handleKeyDown } = useNanoShortcuts({ setShowSaveDialog, modified, showSavePrompt, setModified });
+    const { handleKeyDown } = useNanoShortcuts({ setShowSaveDialog, modified, showSavePrompt, setUnsavedModifications, unsavedModifications, setShowMessage });
 
     // Handle save dialog
     const handleSaveDialogKeyDown = async (e: React.KeyboardEvent) => {
