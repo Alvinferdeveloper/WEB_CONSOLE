@@ -1,3 +1,4 @@
+import { ApiError } from "../utils/ApiError";
 import { findPathToGo, findPath } from "../utils/commandUtils";
 import db from "@/app/libs/db"
 
@@ -27,9 +28,11 @@ export async function saveFileContent(filePath: string, userId: number, currentP
         const file = await db.file.findUnique({ where: { id: fileId }, select: { absolutePath: true, name: true } });
         let absolutePath = file?.absolutePath;
         if (file?.name != fileName && file) {
+            const fileExist = await db.file.findFirst({ where: { name: fileName, directoryId: currentPath.id } });
+            if (fileExist) throw new ApiError(409, 'File already exists');
             const path = file.absolutePath.split('/');
             path.pop();
-            absolutePath = '/'.concat(path.concat(`/${fileName}`).join(''));
+            absolutePath = '/'.concat(path.concat(`${path.length > 1 ? '/' : ''}${fileName}`).join(''));
         }
         await db.file.update({ where: { id: fileId }, data: { content, name: fileName, absolutePath } })
     }

@@ -4,6 +4,11 @@ export function useNanoFileInfo(nanoInfo: { filePath: string }, defaultPath = ""
     const [filePath, setFilePath] = useState("");
     const [saveFilename, setSaveFilename] = useState("");
 
+    const setFileNameFromPath = () => {
+        const fileNameTemp = filePath.split("/").pop() || filePath;
+        setSaveFilename(fileNameTemp);
+    }
+
     useEffect(() => {
         if (nanoInfo.filePath) {
             const fileNameTemp = nanoInfo.filePath.split("/").pop() || nanoInfo.filePath;
@@ -17,7 +22,7 @@ export function useNanoFileInfo(nanoInfo: { filePath: string }, defaultPath = ""
 
     return {
         filePath,
-        setFilePath,
+        setFileNameFromPath,
         saveFilename,
         setSaveFilename,
     };
