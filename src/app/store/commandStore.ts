@@ -21,7 +21,7 @@ type Actions = {
     setPath: ({ id, absolutePath }: { id: number, absolutePath: string }) => void;
     reset: () => void;
     addHistory: (command: string) => void;
-    setNanoInfo: ({ isOpen, filePath, id }: { isOpen: boolean, filePath?: string, id?: number }) => void;
+    setNanoInfo: ({ isOpen, filePath, id }: { isOpen?: boolean, filePath?: string, id?: number }) => void;
 }
 
 export const commandStore = create<States & Actions>((set, get) => (
@@ -40,7 +40,7 @@ export const commandStore = create<States & Actions>((set, get) => (
         }),
         reset: () => set({ commandsExecutions: [], path: { id: 0, absolutePath: '/' } }),
         addHistory: (command: string) => set((state) => ({ history: [...state.history, command] })),
-        setNanoInfo: ({ isOpen, filePath, id }) => set({ nanoInfo: { isOpen, filePath, id } }),
+        setNanoInfo: (info) => set((state) => ({ nanoInfo: { ...state.nanoInfo, ...info } })),
 
     }
 ))

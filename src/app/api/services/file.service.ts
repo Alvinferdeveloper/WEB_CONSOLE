@@ -34,10 +34,13 @@ export async function saveFileContent(filePath: string, userId: number, currentP
             path.pop();
             absolutePath = '/'.concat(path.concat(`${path.length > 1 ? '/' : ''}${fileName}`).join(''));
         }
-        await db.file.update({ where: { id: fileId }, data: { content, name: fileName, absolutePath } })
+        const fileUpdated = await db.file.update({ where: { id: fileId }, data: { content, name: fileName, absolutePath } })
+        return fileUpdated.id;
     }
-    else
-        await createFile(userId, filePath, currentPath, content);
+    else{
+        const newFile = await createFile(userId, filePath, currentPath, content);
+        return newFile.fileId;
+    }
 }
 
 export async function getFileContent(id: number) {
