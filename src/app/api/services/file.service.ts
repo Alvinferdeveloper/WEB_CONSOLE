@@ -29,7 +29,7 @@ export async function saveFileContent(filePath: string, userId: number, currentP
         let absolutePath = file?.absolutePath;
         if (file?.name != fileName && file) {
             const fileExist = await db.file.findFirst({ where: { name: fileName, directoryId: currentPath.id } });
-            if (fileExist) throw new ApiError(409, 'File already exists');
+            if (fileExist) throw new ApiError(409, `File '${fileName}' already exists`);
             const path = file.absolutePath.split('/');
             path.pop();
             absolutePath = '/'.concat(path.concat(`${path.length > 1 ? '/' : ''}${fileName}`).join(''));

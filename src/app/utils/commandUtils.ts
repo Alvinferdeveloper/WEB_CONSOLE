@@ -1,11 +1,32 @@
 import { commandDefinitions, localCommandsAvailable, remoteCommandsAvailable} from "../data/commandDefinitions";
 
-export const isCommandValid = (commandValue: string, commandParams:string[], flags:string[])=>{
+export const validateCommand = (commandValue: string, commandParams: string[], flags: string[]) => {
     const commandExists = commandDefinitions.find(command => command.commandName === commandValue);
-    const areFlagsValid = flags.every(flag=> commandExists?.availableFlags.includes(flag));
-    const miniumExpectecParams = commandParams.length >=( commandExists?.miniumExpectedParams  as number);
-    if(commandExists && areFlagsValid && miniumExpectecParams) return true;
-    return false;
+    
+    if (!commandExists) {
+        return { isValid: false, error: `${commandValue}: command not found` };
+    }
+    
+    const invalidFlags = flags.filter(flag => !commandExists.availableFlags.includes(flag));
+    if (invalidFlags.length > 0) {
+        return { 
+            isValid: false, 
+            error: `${commandValue}: invalid option -- '${invalidFlags[0]}'\nTry '${commandValue} --help' for more information.`
+        };
+    }
+    
+    if (commandParams.length < commandExists.miniumExpectedParams) {
+        return { 
+            isValid: false, 
+            error: `${commandValue}: missing file operand\nTry '${commandValue} --help' for more information.`
+        };
+    }
+    
+    return { isValid: true };
+};
+
+export const isCommandValid = (commandValue: string, commandParams: string[], flags: string[]) => {
+    return validateCommand(commandValue, commandParams, flags).isValid;
     
 }
 

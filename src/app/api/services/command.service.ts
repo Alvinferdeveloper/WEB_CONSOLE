@@ -14,13 +14,13 @@ export async function Mkdir({ userId, commandElements, currentPath }: commandExe
         const { pathToGo, resourceName } = findPathToGo(commandName)
         const pathFound = await findPath(currentPath.id, pathToGo, userId);
         if (!pathFound) return {
-            error: 'Directory not found',
-            outputList: ['Directory not found']
+            error: 'No such file or directory',
+            outputList: ['mkdir: cannot create directory: No such file or directory']
         }
         const isCurrentPathRoot = pathFound.absolutePath == '/';
         const directoryAbsolutePath = pathFound.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${resourceName}`);
         const newDirectoryExists = await db.directory.findFirst({ where: { name: resourceName, parentId: pathFound.id, userId } });
-        if (newDirectoryExists) return { list: [`Error: El  directorio ${commandName}  ya existe`] }
+        if (newDirectoryExists) return { list: [`mkdir: cannot create directory '${commandName}': File exists`] }
         await db.directory.create({ data: { name: resourceName, parentId: pathFound.id, userId, absolutePath: directoryAbsolutePath } })
     }
 }
@@ -43,7 +43,7 @@ export async function Ls({ userId, currentPath, commandElements }: commandExecut
 export async function Cd({ userId, commandElements, currentPath }: commandExecutionParams) {
     if (commandElements.commandParams.length > 1) {
         return {
-            error: 'Too many params',
+            error: 'Too many arguments',
             outputList: ['cd: too many arguments']
         }
     }
@@ -67,7 +67,7 @@ export async function Touch({ userId, commandElements, currentPath }: commandExe
         error: 'Directory not found',
         outputList: ['Directory not found']
     }
-    if (file.exists) return { list: ['Error: Este archivo ya existe'] }
+    if (file.exists) return { list: ['touch: cannot create file ' + commandElements.commandParams[0] + ': File exists'] }
 }
 
 
@@ -79,7 +79,7 @@ export async function Rm({ userId, commandElements, currentPath }: commandExecut
         outputList: ['Directory not found']
     }
     const fileToDelete = await db.file.findFirst({ where: { name: resourceName, directoryId: pathFound.id } });
-    if (!fileToDelete) return { list: ['Error: No se encontro el archivo a eliminar'] };
+    if (!fileToDelete) return { list: ['rm: cannot remove ' + commandElements.commandParams[0] + ': No such file or directory'] };
     await db.file.delete({ where: { id: fileToDelete?.id } });
 
 }
@@ -92,7 +92,7 @@ export async function Rmdir({ userId, commandElements, currentPath }: commandExe
         outputList: ['Directory not found']
     }
     const dirToDelete = await db.directory.findFirst({ where: { name: resourceName, parentId: pathFound.id, userId } });
-    if (!dirToDelete) return { list: ['Error: No se encontro el directorio a eliminar'] };
+    if (!dirToDelete) return { list: ['rmdir: failed to remove ' + commandElements.commandParams[0] + ': No such file or directory'] };
     await db.directory.delete({ where: { id: dirToDelete?.id } });
 }
 
@@ -122,7 +122,7 @@ export async function Mv({ userId, commandElements, currentPath }: commandExecut
         }
         if (resourceToMoveExist) {
             return {
-                error: 'repeated file',
+                error: 'File exists',
                 outputList: ['This file already exists in the current directory']
             }
         }
@@ -156,7 +156,7 @@ export async function Cp({ userId, commandElements, currentPath }: commandExecut
         }
         if (resourceToMoveExists) {
             return {
-                error: 'duplicate file',
+                error: 'File exists',
                 outputList: ['This file already exists in the current directory']
             }
         }
