@@ -1,4 +1,5 @@
 import BasicOutput from "../components/outputs/BasicOutput";
+import HistoryOutput from '../components/outputs/HistoryOutput'
 import { Ls } from "../components/outputs/Ls"
 import { clear, cd, logOutAction, nano } from "../services/commandActions";
 import { help } from "../services/localCommands";
@@ -92,6 +93,7 @@ export const localCommandsAvailable: Record<string, commandDefinition> = {
         commandName: "history",
         miniumExpectedParams: 0,
         availableFlags: [],
+        component:HistoryOutput,
         execute: history
     }
 }
