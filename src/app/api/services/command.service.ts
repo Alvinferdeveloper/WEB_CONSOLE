@@ -167,3 +167,15 @@ export async function Cp({ userId, commandElements, currentPath }: commandExecut
         }
     }
 }
+
+export async function Cat({ userId, commandElements, currentPath }: commandExecutionParams) {
+    const { pathToGo, resourceName } = findPathToGo(commandElements.commandParams[0])
+    const pathFound = await findPath(currentPath.id, pathToGo, userId);
+    if (!pathFound) return {
+        error: 'File not found',
+        outputList: ['Cannot find path ' + commandElements.commandParams[0] + ' because it does not exist']
+    }
+    const fileToRead = await db.file.findFirst({ where: { name: resourceName, directoryId: pathFound.id } });
+    if (!fileToRead) return { list: ['cat: ' + commandElements.commandParams[0] + ': No such file or directory'] };
+    return { list: [fileToRead.content] };
+}
