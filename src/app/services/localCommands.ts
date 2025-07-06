@@ -4,9 +4,7 @@ export function help({ commandParams }: { commandName: string, commandFlags: str
     if(helpData[commandParams[0]]){
         return helpData[commandParams[0]].output;;
     }
-    return {
-        list:['No existe entrada para este comando']
-    } 
+    return helpData.default.output;
 }
 
 export function history(){

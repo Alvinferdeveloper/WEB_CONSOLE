@@ -1,4 +1,4 @@
-import BasicOutput from "../components/outputs/BasicOutput";
+import HelpOutput from '../components/outputs/Help';
 import HistoryOutput from '../components/outputs/HistoryOutput'
 import { Ls } from "../components/outputs/Ls"
 import { clear, cd, logOutAction, nano } from "../services/commandActions";
@@ -77,9 +77,9 @@ export const remoteCommandsAvailable: Record<string, commandDefinition> = {
 export const localCommandsAvailable: Record<string, commandDefinition> = {
     HELP: {
         commandName: "help",
-        miniumExpectedParams: 1,
-        availableFlags: ['a', 'b'],
-        component: BasicOutput,
+        miniumExpectedParams: 0,
+        availableFlags: [],
+        component: HelpOutput,
         execute: help
     },
     CLEAR: {

@@ -6,6 +6,26 @@ type Data = {
 
 export const helpData: Record<string, Data> = {
     // Comandos del sistema
+    default: {
+        output: {
+            list: [
+                'ls - List directory contents',
+                'mkdir - Make directories',
+                'cd - Change the shell working directory',
+                'touch - Change file timestamps',
+                'rm - Remove files or directories',
+                'rmdir - Remove empty directories',
+                'mv - Move (rename) files',
+                'cp - Copy files and directories',
+                'nano - Simple text editor',
+                'cat - Concatenate files and print on the standard output',
+                'help - Display information about builtin commands',
+                'clear - Clear the terminal screen',
+                'exit - Exit the shell',
+                'history - Display the command history'
+            ]
+        }
+    },
     ls: {
         output: {
             list: [
