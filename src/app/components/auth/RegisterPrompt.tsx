@@ -36,9 +36,16 @@ export default function RegisterPrompt() {
   return (
     <>
       <p className="text-xl text-center">Proceso de registro</p>
-      {errorMessage.split(/\n/).map((err, index) => (
-        <p key={index} className="text-sm text-red-600">{err}</p>
-      ))}
+      {errorMessage && (
+        <div className="border-2 border-red-500 bg-red-900 text-sm bg-opacity-20 p-2 my-2">
+          <p className="text-red-400 font-bold">[SYSTEM_ERROR]</p>
+          {errorMessage.split(/\n/).map((err, index) => (
+            <p key={index} className="text-red-400 whitespace-pre-wrap">
+              - {err}
+            </p>
+          ))}
+        </div>
+      )}
 
       {steps.map((step, index) => (
         stepCount > index && (
