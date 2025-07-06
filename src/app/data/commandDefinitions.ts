@@ -1,6 +1,6 @@
 import HelpOutput from '../components/outputs/HelpOutput';
 import HistoryOutput from '../components/outputs/HistoryOutput'
-import { Ls } from "../components/outputs/LsOuput"
+import { LsOutput } from "../components/outputs/LsOutput"
 import { clear, cd, logOutAction, nano } from "../services/commandActions";
 import { help } from "../services/localCommands";
 import { BasicOutPut } from "../types/command";
@@ -20,7 +20,7 @@ export const remoteCommandsAvailable: Record<string, commandDefinition> = {
         commandName: "ls",
         miniumExpectedParams: 0,
         availableFlags: ['a', 'b'],
-        component: Ls,
+        component: LsOutput,
     },
 
     MKDIR: {
