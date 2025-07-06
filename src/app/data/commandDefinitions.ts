@@ -1,6 +1,6 @@
-import HelpOutput from '../components/outputs/Help';
+import HelpOutput from '../components/outputs/HelpOutput';
 import HistoryOutput from '../components/outputs/HistoryOutput'
-import { Ls } from "../components/outputs/Ls"
+import { Ls } from "../components/outputs/LsOuput"
 import { clear, cd, logOutAction, nano } from "../services/commandActions";
 import { help } from "../services/localCommands";
 import { BasicOutPut } from "../types/command";
