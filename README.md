@@ -14,11 +14,11 @@ This project is a web-based terminal simulator built with Next.js, TypeScript, a
 
 **Help Command Execution:**
 
-![Help Command](placeholder-for-help-command-image.png)
+![Help Command](public/images/help-command.webp)
 
 **Text Editor:**
 
-![Text Editor](placeholder-for-text-editor-image.png)
+![Text Editor](public/images/text-editor.webp)
 
 ## Getting Started
 
@@ -43,6 +43,7 @@ To get a local copy up and running, follow these simple steps.
    ```env
    DATABASE_URL="your_database_url"
    NEXTAUTH_SECRET="your_nextauth_secret"
+   NEXTAUTH_URL="http://localhost:3000 or your domain"
    ```
 4. Run the Prisma migrations to set up the database schema.
    ```sh
