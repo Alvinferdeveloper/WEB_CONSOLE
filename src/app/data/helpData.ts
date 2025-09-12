@@ -23,6 +23,7 @@ export const helpData: Record<string, Data> = {
                 'pwd - Print name of current/working directory',
                 'whoami - Print effective user id',
                 'date - Print or set the system date and time',
+                'head - output the first part of files',
                 'help - Display information about builtin commands',
                 'clear - Clear the terminal screen',
                 'exit - Exit the shell',
@@ -218,6 +219,16 @@ export const helpData: Record<string, Data> = {
                 'Usage: date',
                 '',
                 'Display the current time in the given FORMAT, or set the system time.'
+            ]
+        }
+    },
+    head: {
+        output: {
+            list: [
+                'head - output the first part of files',
+                'Usage: head [FILE]...',
+                '',
+                'Print the first 10 lines of each FILE to standard output.'
             ]
         }
     }

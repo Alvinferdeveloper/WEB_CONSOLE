@@ -71,6 +71,11 @@ export const remoteCommandsAvailable: Record<string, commandDefinition> = {
         commandName: 'cat',
         miniumExpectedParams: 1,
         availableFlags: [],
+    },
+    HEAD: {
+        commandName: 'head',
+        miniumExpectedParams: 1,
+        availableFlags: [],
     }
 }
 
