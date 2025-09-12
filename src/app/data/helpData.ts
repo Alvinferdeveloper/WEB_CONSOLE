@@ -19,6 +19,7 @@ export const helpData: Record<string, Data> = {
                 'cp - Copy files and directories',
                 'nano - Simple text editor',
                 'cat - Concatenate files and print on the standard output',
+                'echo - Display a line of text',
                 'help - Display information about builtin commands',
                 'clear - Clear the terminal screen',
                 'exit - Exit the shell',
@@ -36,7 +37,7 @@ export const helpData: Record<string, Data> = {
             ]
         }
     },
-    
+
     cd: {
         output: {
             list: [
@@ -48,7 +49,7 @@ export const helpData: Record<string, Data> = {
             ]
         }
     },
-    
+
     mkdir: {
         output: {
             list: [
@@ -59,7 +60,7 @@ export const helpData: Record<string, Data> = {
             ]
         }
     },
-    
+
     touch: {
         output: {
             list: [
@@ -71,7 +72,7 @@ export const helpData: Record<string, Data> = {
             ]
         }
     },
-    
+
     rm: {
         output: {
             list: [
@@ -82,7 +83,7 @@ export const helpData: Record<string, Data> = {
             ]
         }
     },
-    
+
     rmdir: {
         output: {
             list: [
@@ -93,7 +94,7 @@ export const helpData: Record<string, Data> = {
             ]
         }
     },
-    
+
     mv: {
         output: {
             list: [
@@ -105,7 +106,7 @@ export const helpData: Record<string, Data> = {
             ]
         }
     },
-    
+
     cp: {
         output: {
             list: [
@@ -117,7 +118,7 @@ export const helpData: Record<string, Data> = {
             ]
         }
     },
-    
+
     nano: {
         output: {
             list: [
@@ -131,7 +132,7 @@ export const helpData: Record<string, Data> = {
             ]
         }
     },
-    
+
     // Comandos locales
     help: {
         output: {
@@ -144,7 +145,7 @@ export const helpData: Record<string, Data> = {
             ]
         }
     },
-    
+
     clear: {
         output: {
             list: [
@@ -155,7 +156,7 @@ export const helpData: Record<string, Data> = {
             ]
         }
     },
-    
+
     exit: {
         output: {
             list: [
@@ -166,7 +167,7 @@ export const helpData: Record<string, Data> = {
             ]
         }
     },
-    
+
     history: {
         output: {
             list: [
@@ -174,6 +175,16 @@ export const helpData: Record<string, Data> = {
                 'Usage: history',
                 '',
                 'Display the command history with line numbers.'
+            ]
+        }
+    },
+    echo: {
+        output: {
+            list: [
+                'echo - Display a line of text',
+                'Usage: echo [STRING]...',
+                '',
+                'Print the STRING(s) to standard output.'
             ]
         }
     }
