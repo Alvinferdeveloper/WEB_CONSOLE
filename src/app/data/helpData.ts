@@ -25,6 +25,7 @@ export const helpData: Record<string, Data> = {
                 'date - Print or set the system date and time',
                 'head - output the first part of files',
                 'tail - output the last part of files',
+                'wc - print newline, word, and byte counts for each file',
                 'help - Display information about builtin commands',
                 'clear - Clear the terminal screen',
                 'exit - Exit the shell',
@@ -240,6 +241,16 @@ export const helpData: Record<string, Data> = {
                 'Usage: tail [FILE]...',
                 '',
                 'Print the last 10 lines of each FILE to standard output.'
+            ]
+        }
+    },
+    wc: {
+        output: {
+            list: [
+                'wc - print newline, word, and byte counts for each file',
+                'Usage: wc [FILE]...',
+                '',
+                'Print newline, word, and character counts for each FILE.'
             ]
         }
     }

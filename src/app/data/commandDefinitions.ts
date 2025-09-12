@@ -81,6 +81,11 @@ export const remoteCommandsAvailable: Record<string, commandDefinition> = {
         commandName: 'tail',
         miniumExpectedParams: 1,
         availableFlags: [],
+    },
+    WC: {
+        commandName: 'wc',
+        miniumExpectedParams: 1,
+        availableFlags: [],
     }
 }
 

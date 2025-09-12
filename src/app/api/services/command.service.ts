@@ -207,3 +207,26 @@ export async function Tail({ userId, commandElements, currentPath }: commandExec
     const lines = fileToRead.content.split('\n').slice(-10);
     return { list: lines };
 }
+
+export async function Wc({ userId, commandElements, currentPath }: commandExecutionParams) {
+    const fileName = commandElements.commandParams[0];
+    const { pathToGo, resourceName } = findPathToGo(fileName);
+    const pathFound = await findPath(currentPath.id, pathToGo, userId);
+
+    if (!pathFound) return {
+        error: 'File not found',
+        outputList: ['Cannot find path ' + fileName + ' because it does not exist']
+    }
+
+    const fileToRead = await db.file.findFirst({ where: { name: resourceName, directoryId: pathFound.id, userId } });
+
+    if (!fileToRead) return { list: ['wc: ' + fileName + ': No such file or directory'] };
+
+    const content = fileToRead.content;
+    const lineCount = content.split('\n').length;
+    const wordCount = content.trim().split(/\s+/).filter(Boolean).length;
+    const charCount = content.length;
+
+    const output = `${lineCount}   ${wordCount}   ${charCount}   ${fileName}`;
+    return { list: [output] };
+}

@@ -12,6 +12,7 @@ export const commandExecutables: Record<string, commandExecution> = {
     cp: commandServices.Cp,
     cat: commandServices.Cat,
     head: commandServices.Head,
-    tail: commandServices.Tail
+    tail: commandServices.Tail,
+    wc: commandServices.Wc
 }
 
