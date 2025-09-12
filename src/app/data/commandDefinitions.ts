@@ -2,7 +2,7 @@ import HelpOutput from '../components/outputs/HelpOutput';
 import HistoryOutput from '../components/outputs/HistoryOutput'
 import { LsOutput } from "../components/outputs/LsOutput"
 import { clear, cd, logOutAction, nano } from "../services/commandActions";
-import { help, echo } from "../services/localCommands";
+import { help, echo, pwd } from "../services/localCommands";
 import { BasicOutPut } from "../types/command";
 import { history } from "../services/localCommands";
 
@@ -98,7 +98,7 @@ export const localCommandsAvailable: Record<string, commandDefinition> = {
         commandName: "history",
         miniumExpectedParams: 0,
         availableFlags: [],
-        component:HistoryOutput,
+        component: HistoryOutput,
         execute: history
     },
     ECHO: {
@@ -106,6 +106,12 @@ export const localCommandsAvailable: Record<string, commandDefinition> = {
         miniumExpectedParams: 0,
         availableFlags: [],
         execute: echo
+    },
+    PWD: {
+        commandName: "pwd",
+        miniumExpectedParams: 0,
+        availableFlags: [],
+        execute: pwd
     }
 }
 

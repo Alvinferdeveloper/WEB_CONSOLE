@@ -20,3 +20,9 @@ export function echo({ commandParams }: { commandName: string, commandFlags: str
     }
 }
 
+export function pwd({ }: { commandName: string, commandFlags: string[], commandParams: string[] }, currentPath: { id: number, absolutePath: string }) {
+    return {
+        list: [currentPath.absolutePath]
+    }
+}
+

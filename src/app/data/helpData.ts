@@ -20,6 +20,7 @@ export const helpData: Record<string, Data> = {
                 'nano - Simple text editor',
                 'cat - Concatenate files and print on the standard output',
                 'echo - Display a line of text',
+                'pwd - Print name of current/working directory',
                 'help - Display information about builtin commands',
                 'clear - Clear the terminal screen',
                 'exit - Exit the shell',
@@ -185,6 +186,16 @@ export const helpData: Record<string, Data> = {
                 'Usage: echo [STRING]...',
                 '',
                 'Print the STRING(s) to standard output.'
+            ]
+        }
+    },
+    pwd: {
+        output: {
+            list: [
+                'pwd - Print name of current/working directory',
+                'Usage: pwd',
+                '',
+                'Print the full filename of the current working directory.'
             ]
         }
     }
