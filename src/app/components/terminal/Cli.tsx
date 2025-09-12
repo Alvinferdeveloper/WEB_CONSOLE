@@ -9,6 +9,7 @@ import { useState } from "react";
 import SignInPrompts from "../auth/SignInPrompt";
 import InputPrompt from "./InputPrompt";
 import RegisterPrompt from "../auth/RegisterPrompt";
+import { userStore } from "../../store/userStore";
 
 export default function Cli() {
     const { commandsExecutions } = commandStore();
@@ -17,6 +18,13 @@ export default function Cli() {
     const { banner } = useFiglet(session?.user.name || '');
     const [accountOption, setAccountOption] = useState('');
     const [register, setRegister] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        if (session) {
+            userStore.setState({ user: { id: session.user.id, name: session.user.name } });
+        }
+    }, [session]);
+
     useEffect(() => {
         setScroll();
     }, [commandsExecutions]);

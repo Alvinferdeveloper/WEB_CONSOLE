@@ -1,5 +1,7 @@
 import { helpData } from "../data/helpData";
 import { commandStore } from "../store/commandStore";
+import { userStore } from "../store/userStore";
+
 export function help({ commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }) {
     if (helpData[commandParams[0]]) {
         return helpData[commandParams[0]].output;;
@@ -20,9 +22,16 @@ export function echo({ commandParams }: { commandName: string, commandFlags: str
     }
 }
 
-export function pwd({ }: { commandName: string, commandFlags: string[], commandParams: string[] }, currentPath: { id: number, absolutePath: string }) {
+export function pwd({ commandName, commandFlags, commandParams }: { commandName: string, commandFlags: string[], commandParams: string[] }, currentPath: { id: number, absolutePath: string }) {
     return {
         list: [currentPath.absolutePath]
+    }
+}
+
+export function whoami() {
+    const userName = userStore.getState().user?.name;
+    return {
+        list: [userName || '']
     }
 }
 

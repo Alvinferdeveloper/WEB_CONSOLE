@@ -21,6 +21,7 @@ export const helpData: Record<string, Data> = {
                 'cat - Concatenate files and print on the standard output',
                 'echo - Display a line of text',
                 'pwd - Print name of current/working directory',
+                'whoami - Print effective user id',
                 'help - Display information about builtin commands',
                 'clear - Clear the terminal screen',
                 'exit - Exit the shell',
@@ -196,6 +197,16 @@ export const helpData: Record<string, Data> = {
                 'Usage: pwd',
                 '',
                 'Print the full filename of the current working directory.'
+            ]
+        }
+    },
+    whoami: {
+        output: {
+            list: [
+                'whoami - Print effective user id',
+                'Usage: whoami',
+                '',
+                'Print the user name associated with the current effective user ID.'
             ]
         }
     }
