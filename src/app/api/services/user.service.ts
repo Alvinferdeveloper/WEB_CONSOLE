@@ -10,7 +10,7 @@ interface User {
     password: string
 }
 export async function register(user: User){
-    const userExist = await db.user.findFirst({ where: { username: user.name}});
+    const userExist = await db.user.findFirst({ where: { username: user.username}});
     if( userExist ){
       throw new ApiError(409, "El nombre de usuario ya existe");
     }
