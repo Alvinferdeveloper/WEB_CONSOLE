@@ -22,6 +22,7 @@ export const helpData: Record<string, Data> = {
                 'echo - Display a line of text',
                 'pwd - Print name of current/working directory',
                 'whoami - Print effective user id',
+                'date - Print or set the system date and time',
                 'help - Display information about builtin commands',
                 'clear - Clear the terminal screen',
                 'exit - Exit the shell',
@@ -207,6 +208,16 @@ export const helpData: Record<string, Data> = {
                 'Usage: whoami',
                 '',
                 'Print the user name associated with the current effective user ID.'
+            ]
+        }
+    },
+    date: {
+        output: {
+            list: [
+                'date - Print or set the system date and time',
+                'Usage: date',
+                '',
+                'Display the current time in the given FORMAT, or set the system time.'
             ]
         }
     }

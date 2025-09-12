@@ -35,3 +35,9 @@ export function whoami() {
     }
 }
 
+export function date() {
+    return {
+        list: [new Date().toString()]
+    }
+}
+
