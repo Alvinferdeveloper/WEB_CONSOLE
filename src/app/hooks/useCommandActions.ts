@@ -10,9 +10,9 @@ export default function useCommandActions() {
     const executeCommand = async (command: string, time: string, user: User) => {
         const { commandName, commandFlags, commandParams } = parseCommand(command);
         let commandPromptOutput: CommandPromptOutput | void = undefined;
-        
+
         const validation = validateCommand(commandName, commandParams, commandFlags);
-        
+
         if (validation.isValid) {
             if (isCommandWithActionNeeded(commandName)) {// commands that need to execute actions on the local state
                 commandPromptOutput = await executeActionCommand({ commandName, commandFlags, commandParams }, time, user.name, path);
@@ -40,7 +40,7 @@ export default function useCommandActions() {
                 input: command,
                 absolutePath: path.absolutePath,
                 output: {
-                    list: validation.error ? [validation.error] : [`${commandName}: command not found`]
+                    list: validation.error != undefined ? [validation.error] : [`${commandName}: command not found`]
                 },
                 component: BasicOutput
             };
