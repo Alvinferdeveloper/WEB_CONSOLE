@@ -19,7 +19,7 @@ export const remoteCommandsAvailable: Record<string, commandDefinition> = {
     LS: {
         commandName: "ls",
         miniumExpectedParams: 0,
-        availableFlags: ['a', 'b'],
+        availableFlags: ['a', 'b', '-l'],
         component: LsOutput,
     },
 

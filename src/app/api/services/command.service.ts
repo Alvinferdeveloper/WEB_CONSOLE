@@ -27,6 +27,7 @@ export async function Mkdir({ userId, commandElements, currentPath }: commandExe
 
 
 export async function Ls({ userId, currentPath, commandElements }: commandExecutionParams) {
+    const withDetails = commandElements.commandFlags.includes('-l');
     let directoryToListId = currentPath.id;
     if (commandElements.commandParams[0]) {
         const routeFound = await findPath(directoryToListId, commandElements.commandParams[0], userId);
@@ -35,9 +36,15 @@ export async function Ls({ userId, currentPath, commandElements }: commandExecut
 
     const directoriesDoc = await db.directory.findMany({ where: { userId, parentId: directoryToListId } })
     const filesDoc = await db.file.findMany({ where: { userId, directoryId: directoryToListId } });
-    const directories = directoriesDoc.map(({ id, name }) => ({ id, name, type: 'DIRECTORY' }));
-    const files = filesDoc.map(({ id, name }) => ({ id, name, type: 'FILE' }));
-    return [...directories, ...files]
+
+    const directories = directoriesDoc.map(({ id, name, created_at }) => ({ id, name, type: 'DIRECTORY', created_at }));
+    const files = filesDoc.map(({ id, name, created_at }) => ({ id, name, type: 'FILE', created_at }));
+
+    if (withDetails) {
+        return [...directories, ...files].map(file => ({ ...file, created_at: file.created_at.toString() }))
+    }
+
+    return [...directories, ...files].map(({ id, name, type }) => ({ id, name, type }));
 }
 
 export async function Cd({ userId, commandElements, currentPath }: commandExecutionParams) {
