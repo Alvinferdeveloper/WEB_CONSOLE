@@ -24,6 +24,7 @@ export const helpData: Record<string, Data> = {
                 'whoami - Print effective user id',
                 'date - Print or set the system date and time',
                 'head - output the first part of files',
+                'tail - output the last part of files',
                 'help - Display information about builtin commands',
                 'clear - Clear the terminal screen',
                 'exit - Exit the shell',
@@ -229,6 +230,16 @@ export const helpData: Record<string, Data> = {
                 'Usage: head [FILE]...',
                 '',
                 'Print the first 10 lines of each FILE to standard output.'
+            ]
+        }
+    },
+    tail: {
+        output: {
+            list: [
+                'tail - output the last part of files',
+                'Usage: tail [FILE]...',
+                '',
+                'Print the last 10 lines of each FILE to standard output.'
             ]
         }
     }

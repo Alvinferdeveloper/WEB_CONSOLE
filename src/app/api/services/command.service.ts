@@ -193,3 +193,17 @@ export async function Head({ userId, commandElements, currentPath }: commandExec
     const lines = fileToRead.content.split('\n').slice(0, 10);
     return { list: lines };
 }
+
+export async function Tail({ userId, commandElements, currentPath }: commandExecutionParams) {
+    const { pathToGo, resourceName } = findPathToGo(commandElements.commandParams[0])
+    const pathFound = await findPath(currentPath.id, pathToGo, userId);
+    if (!pathFound) return {
+        error: 'File not found',
+        outputList: ['Cannot find path ' + commandElements.commandParams[0] + ' because it does not exist']
+    }
+    const fileToRead = await db.file.findFirst({ where: { name: resourceName, directoryId: pathFound.id, userId } });
+    if (!fileToRead) return { list: ['tail: cannot open \'' + commandElements.commandParams[0] + '\' for reading: No such file or directory'] };
+
+    const lines = fileToRead.content.split('\n').slice(-10);
+    return { list: lines };
+}
