@@ -8,10 +8,13 @@ export default withAuth({
     signOut: "/",
   },
 })
- 
+
 export const config = {
   matcher: [
-    '/api/initialPath',
-    '/api/command'
+    '/api/initial-path',
+    '/api/command',
+    '/api/files/save-content',
+    '/api/files/writable-path',
+    '/api/files/get-content',
   ],
 }
