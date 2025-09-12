@@ -1,18 +1,18 @@
 import { useEffect } from "react";
 import { commandStore } from "../store/commandStore";
 
-export default function useGetinitalPath(){
-    const { path, setPath} = commandStore();
+export default function useGetinitalPath() {
+    const { path, setPath } = commandStore();
 
-    useEffect(()=>{
-        const getInitalPath = async ()=>{
-            const res = await fetch('api/initialPath');
+    useEffect(() => {
+        const getInitalPath = async () => {
+            const res = await fetch('api/initial-path');
             const json = await res.json();
-            setPath({id:json.id, absolutePath:json.absolutePath})
+            setPath({ id: json.id, absolutePath: json.absolutePath })
         }
 
         getInitalPath();
-    },[])
+    }, [])
 
     return {
         path,
