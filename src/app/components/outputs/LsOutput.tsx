@@ -18,7 +18,7 @@ export function LsOutput({ output }: { output: LsOutPut }) {
         return (
             <div>
                 {output.map((file, index) => (
-                    <div className="flex space-x-4 text-sm mt-1" key={index}>
+                    <div className="flex space-x-4 text-lg mt-1" key={index}>
                         <p className="w-24 ${file.type === 'DIRECTORY' ? 'text-blue-400' : 'text-gray-400'}">
                             {file.type === 'DIRECTORY' ? 'd--x--x--x' : '----rwx---'}
                         </p>
@@ -37,7 +37,7 @@ export function LsOutput({ output }: { output: LsOutPut }) {
         <div className="grid grid-cols-4 gap-x-4">
             {
                 output.map((file, index) => (
-                    <p className={`${file.type === 'DIRECTORY' ? 'text-blue-500' : 'text-white'} text-sm mt-1`} key={index}>
+                    <p className={`${file.type === 'DIRECTORY' ? 'text-blue-500' : 'text-white'} text-lg mt-1`} key={index}>
                         {file.name}
                     </p>
                 ))
