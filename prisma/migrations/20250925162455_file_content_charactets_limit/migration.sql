@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `file` MODIFY `content` VARCHAR(5000) NOT NULL DEFAULT '';
