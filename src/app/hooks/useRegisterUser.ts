@@ -14,7 +14,7 @@ export default function useRegisterUser(){
     const register = async (user: User)=>{
         try {
             validateUserRegistration(user);
-            const res = await fetch('http://localhost:3000/api/user',{
+            const res = await fetch('/api/user',{
                 method: 'POST',
                 body: JSON.stringify(user)
             });
