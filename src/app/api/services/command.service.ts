@@ -107,27 +107,28 @@ export async function Mv({ userId, commandElements, currentPath }: commandExecut
     const resources = commandElements.commandParams;
     let { pathToGo: pathToMove, resourceName: fileToMoveName } = findPathToGo(resources[0]);
     let { pathToGo: pathToPaste, resourceName: targetFileName } = findPathToGo(resources[1]);
-    pathToPaste = targetFileName == ".." ? ".." : pathToPaste
+    pathToPaste = targetFileName == ".." ? pathToPaste.concat("/..") : pathToPaste;
     const pathToMoveFound = await findPath(currentPath.id, pathToMove, userId);
     const pathToPasteFound = await findPath(currentPath.id, pathToPaste, userId);
     const fileToMove = await findFile(pathToMoveFound?.id || -1, fileToMoveName);
     if (pathToMoveFound && pathToPasteFound && fileToMove) {
         let targetDirectory = await db.directory.findFirst({ where: { name: targetFileName, parentId: pathToPasteFound?.id } });
         const typeOfFile = await getTypeOfFile(pathToMoveFound.id, fileToMoveName);
-        fileToMoveName = targetDirectory || targetFileName == "." || targetFileName == ".." ? fileToMoveName : targetFileName;
+        fileToMoveName = targetDirectory || targetFileName == "." || targetFileName == ".." || pathToPaste == '/' ? fileToMoveName : targetFileName;
         targetDirectory = targetDirectory ? targetDirectory : pathToPasteFound;
         const isCurrentPathRoot = targetDirectory.absolutePath == '/';
         const newAbsolutePath = targetDirectory.absolutePath.concat(`${isCurrentPathRoot ? '' : '/'}${fileToMoveName}`);
         let resourceToMoveExist = null;
         if (typeOfFile == TYPE_OF_FILES.DIRECTORY) {
             resourceToMoveExist = await db.directory.findFirst({ where: { name: fileToMoveName, parentId: targetDirectory.id } });
-            !resourceToMoveExist && await db.directory.update({ where: { id: fileToMove.id }, data: { name: fileToMoveName, parentId: targetDirectory.id, absolutePath: newAbsolutePath } });
+            (!resourceToMoveExist || targetDirectory.id == pathToMoveFound.id) && await db.directory.update({ where: { id: fileToMove.id }, data: { name: fileToMoveName, parentId: targetDirectory.id, absolutePath: newAbsolutePath } });
         }
         else if (typeOfFile == TYPE_OF_FILES.REGULAR_FILE) {
-            resourceToMoveExist = await db.file.findFirst({ where: { name: fileToMove.name, directoryId: targetDirectory.id } });
-            !resourceToMoveExist && await db.file.update({ where: { id: fileToMove.id }, data: { name: fileToMoveName, directoryId: targetDirectory.id, absolutePath: newAbsolutePath } });
+            console.log(targetDirectory)
+            resourceToMoveExist = await db.file.findFirst({ where: { name: fileToMoveName, directoryId: targetDirectory.id } });
+            (!resourceToMoveExist || targetDirectory.id == pathToMoveFound.id) && await db.file.update({ where: { id: fileToMove.id }, data: { name: fileToMoveName, directoryId: targetDirectory.id, absolutePath: newAbsolutePath } });
         }
-        if (resourceToMoveExist) {
+        if (resourceToMoveExist && targetDirectory.id != pathToMoveFound.id) {
             return {
                 error: 'File exists',
                 outputList: ['This file already exists in the current directory']
