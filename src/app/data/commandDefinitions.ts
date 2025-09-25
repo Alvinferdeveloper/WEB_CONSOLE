@@ -5,6 +5,7 @@ import { clear, cd, logOutAction, nano } from "../services/commandActions";
 import { help, echo, pwd, whoami, date } from "../services/localCommands";
 import { BasicOutPut } from "../types/command";
 import { history } from "../services/localCommands";
+import CatOutput from '../components/outputs/CatOutput';
 
 type commandDefinition = {
     commandName: string,
@@ -71,6 +72,7 @@ export const remoteCommandsAvailable: Record<string, commandDefinition> = {
         commandName: 'cat',
         miniumExpectedParams: 1,
         availableFlags: [],
+        component: CatOutput,
     },
     HEAD: {
         commandName: 'head',
