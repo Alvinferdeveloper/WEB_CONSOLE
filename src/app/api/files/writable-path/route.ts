@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import { ApiError } from "../../utils/ApiError";
 import globalExceptionHandler from "../../middlewares/globalExceptionHandler";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/app/libs/authOptions";
 import { writableFilePath } from "../../services/file.service";
 
 async function writablePathPOST(req: Request) {

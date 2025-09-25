@@ -2,7 +2,7 @@ import { ApiError } from "../utils/ApiError";
 import globalExceptionHandler from "../middlewares/globalExceptionHandler";
 import { getServerSession } from "next-auth";
 import { commandExecutables } from "../data/commandExecutables";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/app/libs/authOptions";
 
 async function executeCommand(req: Request) {
     const session = await getServerSession(authOptions);

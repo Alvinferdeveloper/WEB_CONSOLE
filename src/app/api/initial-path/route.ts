@@ -1,7 +1,7 @@
 import globalExceptionHandler from "../middlewares/globalExceptionHandler";
 import db from "@/app/libs/db";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/app/libs/authOptions";
 import { ApiError } from "../utils/ApiError";
 
 async function getInitialPath() {
